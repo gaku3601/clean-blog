@@ -29,3 +29,7 @@ func (controller *UserController) Create(c Context) {
 	}
 	c.JSON(201, nil)
 }
+
+func (controller *UserController) SignIn(c Context) {
+	c.JSON(200, nil)
+}
