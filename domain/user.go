@@ -6,3 +6,7 @@ type User struct {
 	LastName  string
 	Email     string
 }
+
+type Auth struct {
+	Token string
+}

@@ -13,7 +13,7 @@ func TestCreateJWT(t *testing.T) {
 		user := domain.User{ID: 1, Email: "ex@example.com"}
 		use := new(UserUsecase)
 		s := use.CreateJWT(user)
-		token, _ := jwt.Parse(s, func(token *jwt.Token) (interface{}, error) {
+		token, _ := jwt.Parse(s.Token, func(token *jwt.Token) (interface{}, error) {
 			return []byte("foobar"), nil
 		})
 

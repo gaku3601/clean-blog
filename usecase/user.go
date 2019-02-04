@@ -17,7 +17,7 @@ func (u *UserUsecase) Add(d domain.User) (err error) {
 	return
 }
 
-func (u *UserUsecase) CreateJWT(d domain.User) string {
+func (u *UserUsecase) CreateJWT(d domain.User) (auth *domain.Auth) {
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
 		"id":    d.ID,
 		"email": d.Email,
@@ -28,5 +28,5 @@ func (u *UserUsecase) CreateJWT(d domain.User) string {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return tokenstring
+	return &domain.Auth{Token: tokenstring}
 }
