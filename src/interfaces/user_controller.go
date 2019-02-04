@@ -1,8 +1,8 @@
 package interfaces
 
 import (
-	"github.com/gaku3601/clean-blog/domain"
-	"github.com/gaku3601/clean-blog/usecase"
+	"github.com/gaku3601/clean-blog/src/domain"
+	"github.com/gaku3601/clean-blog/src/usecase"
 )
 
 type UserController struct {

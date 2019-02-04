@@ -5,7 +5,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/gaku3601/clean-blog/interfaces"
+	"github.com/gaku3601/clean-blog/src/interfaces"
 )
 
 type SqlHandler struct {

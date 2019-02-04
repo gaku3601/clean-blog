@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gaku3601/clean-blog/domain"
+	"github.com/gaku3601/clean-blog/src/domain"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

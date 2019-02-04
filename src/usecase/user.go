@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gaku3601/clean-blog/domain"
+	"github.com/gaku3601/clean-blog/src/domain"
 )
 
 type UserUsecase struct {

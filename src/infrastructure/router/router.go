@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/gaku3601/clean-blog/infrastructure/database"
-	"github.com/gaku3601/clean-blog/interfaces"
+	"github.com/gaku3601/clean-blog/src/infrastructure/database"
+	"github.com/gaku3601/clean-blog/src/interfaces"
 	gin "github.com/gin-gonic/gin"
 )
 
