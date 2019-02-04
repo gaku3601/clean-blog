@@ -1,7 +1,9 @@
-package infrastructure
+package database
 
 import (
 	"database/sql"
+
+	_ "github.com/lib/pq"
 
 	"github.com/gaku3601/clean-blog/interfaces"
 )
@@ -10,10 +12,11 @@ type SqlHandler struct {
 	Conn *sql.DB
 }
 
-func NewSqlHandler() interfaces.SqlHandler {
-	conn, err := sql.Open("mysql", "root:@tcp(db:3306)/sample")
+func NewSqlHandler(connector string) interfaces.SqlHandler {
+	conn, _ := sql.Open("postgres", connector)
+	err := conn.Ping()
 	if err != nil {
-		panic(err.Error)
+		panic("DBと接続できませんでした。接続内容を確認してください。")
 	}
 	sqlHandler := new(SqlHandler)
 	sqlHandler.Conn = conn

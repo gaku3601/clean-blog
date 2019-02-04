@@ -1,7 +1,7 @@
 package main
 
-import "github.com/gaku3601/clean-blog/infrastructure"
+import "github.com/gaku3601/clean-blog/infrastructure/router"
 
 func main() {
-	infrastructure.Router.Run()
+	router.Router.Run()
 }
