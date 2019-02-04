@@ -12,6 +12,6 @@ func TestNewSqlHandler(t *testing.T) {
 			err := recover()
 			So(err, ShouldEqual, "DBと接続できませんでした。接続内容を確認してください。")
 		}()
-		NewSqlHandler("host=127.0.0.1 port=5555 user=root password=password dbname=testdb sslmode=disable")
+		NewSqlHandler("postgres://postgres:mysecretpassword1234@localhost:5433/testdb?sslmode=disable")
 	})
 }
