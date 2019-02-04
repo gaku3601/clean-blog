@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"log"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gaku3601/clean-blog/domain"
@@ -17,12 +18,12 @@ func (u *UserUsecase) Add(d domain.User) (err error) {
 }
 
 func (u *UserUsecase) CreateJWT(d domain.User) string {
-	// User情報をtokenに込める
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-		"ID":    d.ID,
-		"Email": d.Email,
+		"id":    d.ID,
+		"email": d.Email,
+		"exp":   time.Now().Add(time.Hour * 24).Unix(),
+		"iat":   time.Now(),
 	})
-	// Secretで文字列にする. このSecretはサーバだけが知っている
 	tokenstring, err := token.SignedString([]byte("foobar"))
 	if err != nil {
 		log.Fatalln(err)

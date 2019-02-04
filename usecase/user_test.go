@@ -18,10 +18,16 @@ func TestCreateJWT(t *testing.T) {
 		})
 
 		Convey("emailが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["Email"], ShouldEqual, "ex@example.com")
+			So(token.Claims.(jwt.MapClaims)["email"], ShouldEqual, "ex@example.com")
 		})
 		Convey("idが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["ID"], ShouldEqual, 1)
+			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
+		})
+		Convey("expが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["exp"], ShouldNotBeNil)
+		})
+		Convey("iatが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
 		})
 
 	})
