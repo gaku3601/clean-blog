@@ -31,5 +31,7 @@ func (controller *UserController) Create(c Context) {
 }
 
 func (controller *UserController) SignIn(c Context) {
-	c.JSON(200, nil)
+	u := domain.User{}
+	auth := controller.use.CreateJWT(u)
+	c.JSON(200, auth)
 }

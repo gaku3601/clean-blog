@@ -1,17 +1,24 @@
 package interfaces
 
 import (
+	"reflect"
 	"testing"
 
+	"github.com/gaku3601/clean-blog/domain"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestSignIn(t *testing.T) {
-	Convey("SignIn()で200が返却されること", t, func() {
+	Convey("SignIn()処理のテスト", t, func() {
 		u := new(UserController)
 		c := new(testContext)
 		u.SignIn(c)
-		So(c.status, ShouldEqual, 200)
+		Convey("200が返却されること", func() {
+			So(c.status, ShouldEqual, 200)
+		})
+		Convey("Auth structが返却されること", func() {
+			So(reflect.TypeOf(c.content), ShouldEqual, reflect.TypeOf(new(domain.Auth)))
+		})
 	})
 }
 
