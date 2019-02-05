@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"os"
 
 	_ "github.com/lib/pq"
 
@@ -12,7 +13,8 @@ type SqlHandler struct {
 	Conn *sql.DB
 }
 
-func NewSqlHandler(connector string) interfaces.SqlHandler {
+func NewSqlHandler() interfaces.SqlHandler {
+	connector := fetchDatabaseEnv()
 	conn, _ := sql.Open("postgres", connector)
 	err := conn.Ping()
 	if err != nil {
@@ -21,6 +23,14 @@ func NewSqlHandler(connector string) interfaces.SqlHandler {
 	sqlHandler := new(SqlHandler)
 	sqlHandler.Conn = conn
 	return sqlHandler
+}
+
+func fetchDatabaseEnv() (d string) {
+	d = os.Getenv("DATABASE")
+	if d == "" {
+		panic("$DATABASEを環境変数として設定してください。")
+	}
+	return
 }
 
 type SqlResult struct {
