@@ -6,14 +6,14 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/gaku3601/clean-blog/src/interfaces"
+	"github.com/gaku3601/clean-blog/src/interfaces/database"
 )
 
 type SqlHandler struct {
 	Conn *sql.DB
 }
 
-func NewSqlHandler() interfaces.SqlHandler {
+func NewSqlHandler() database.SqlHandler {
 	connector := fetchDatabaseEnv()
 	conn, _ := sql.Open("postgres", connector)
 	err := conn.Ping()
@@ -37,7 +37,7 @@ type SqlResult struct {
 	Result sql.Result
 }
 
-func (handler *SqlHandler) Execute(statement string, args ...interface{}) (interfaces.Result, error) {
+func (handler *SqlHandler) Execute(statement string, args ...interface{}) (database.Result, error) {
 	res := SqlResult{}
 	result, err := handler.Conn.Exec(statement, args...)
 	if err != nil {

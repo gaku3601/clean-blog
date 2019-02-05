@@ -1,7 +1,8 @@
-package interfaces
+package controller
 
 import (
 	"github.com/gaku3601/clean-blog/src/domain"
+	"github.com/gaku3601/clean-blog/src/interfaces/database"
 	"github.com/gaku3601/clean-blog/src/usecase"
 )
 
@@ -9,10 +10,10 @@ type UserController struct {
 	use usecase.UserUsecase
 }
 
-func NewUserController(sqlHandler SqlHandler) *UserController {
+func NewUserController(sqlHandler database.SqlHandler) *UserController {
 	return &UserController{
 		use: usecase.UserUsecase{
-			Repo: &UserRepository{
+			Repo: &database.UserRepository{
 				SqlHandler: sqlHandler,
 			},
 		},
