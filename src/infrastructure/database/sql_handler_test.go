@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"os/exec"
 	"testing"
 
 	_ "github.com/lib/pq"
@@ -39,8 +40,7 @@ func TestInsertUser(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	// table作成
-	db.Exec("CREATE TABLE users (id SERIAL PRIMARY KEY, email varchar(50) NOT NULL, password  char(60) NOT NULL, UNIQUE(email));")
+	exec.Command("goose", "-dir", "/Users/gaku/src/github.com/gaku3601/clean-blog/migration", "postgres", "postgres://postgres:mysecretpassword1234@localhost:5432/testdb?sslmode=disable", "up").Run()
 	Convey("Userが格納可能か検証", t, func() {
 		// 関数テスト
 		conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
@@ -54,9 +54,7 @@ func TestInsertUser(t *testing.T) {
 		fmt.Println(err)
 		So(Email, ShouldEqual, "ex@example.com")
 	})
-	//あと処理
-	db.Exec("drop schema public cascade;")
-	db.Exec("create schema public;")
+	exec.Command("goose", "-dir", "/Users/gaku/src/github.com/gaku3601/clean-blog/migration", "postgres", "postgres://postgres:mysecretpassword1234@localhost:5432/testdb?sslmode=disable", "down").Run()
 }
 
 func fetchDatabaseTestEnv() (env string) {
