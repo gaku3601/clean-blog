@@ -8,6 +8,7 @@ import (
 	"github.com/gaku3601/clean-blog/src/interfaces/database"
 )
 
+// SQLHandler ハンドラー
 type SQLHandler struct {
 	Conn *sql.DB
 }
@@ -33,32 +34,9 @@ func fetchDatabaseEnv() (d string) {
 	return
 }
 
+// InsertUser ユーザ内容を格納します。
 func (handler *SQLHandler) InsertUser(email string, password string) (err error) {
 	_, err = handler.Conn.Exec("Insert Into users (email, password) values ($1, $2);", email, password)
 	fmt.Println(err)
 	return nil
 }
-
-/*
-type SqlResult struct {
-	Result sql.Result
-}
-
-func (handler *SqlHandler) Execute(statement string, args ...interface{}) (database.Result, error) {
-	res := SqlResult{}
-	result, err := handler.Conn.Exec(statement, args...)
-	if err != nil {
-		return res, err
-	}
-	res.Result = result
-	return res, nil
-}
-
-func (r SqlResult) LastInsertId() (int64, error) {
-	return r.Result.LastInsertId()
-}
-
-func (r SqlResult) RowsAffected() (int64, error) {
-	return r.Result.RowsAffected()
-}
-*/
