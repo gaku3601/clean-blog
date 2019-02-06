@@ -20,15 +20,16 @@ type Auth struct {
 	Token string
 }
 
-func NewUser(password string) *User {
-	u := &User{Password: password}
-	u.HashPassword = u.createHash(password)
+func NewUser(id int, email string, password string) *User {
+	u := &User{ID: id, Email: email, Password: password}
+	u.createHashPassword()
+	u.createJWT()
 	return u
 }
 
-func (u *User) createHash(str string) string {
-	hash, _ := bcrypt.GenerateFromPassword([]byte(str), bcrypt.DefaultCost)
-	return string(hash)
+func (u *User) createHashPassword() {
+	hash, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	u.HashPassword = string(hash)
 }
 
 // CreateJWT JWTトークンを作成します。

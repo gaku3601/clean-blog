@@ -9,19 +9,22 @@ import (
 
 func TestUser(t *testing.T) {
 	Convey("Userが生成された際", t, func() {
+		u := NewUser(1, "email", "password")
 		Convey("HashPasswordも格納されるか", func() {
-			u := NewUser("password")
 			So(len(u.HashPassword), ShouldEqual, 60)
+		})
+		Convey("JWTも格納されるか", func() {
+			So(len(u.JWT), ShouldNotBeEmpty)
 		})
 	})
 
 }
 
-func TestCreateHash(t *testing.T) {
+func TestCreateHashPassword(t *testing.T) {
 	Convey("hash化されているか検証する", t, func() {
 		u := &User{}
-		hash := u.createHash("test")
-		So(len(hash), ShouldEqual, 60)
+		u.createHashPassword()
+		So(len(u.HashPassword), ShouldEqual, 60)
 	})
 }
 
@@ -45,6 +48,5 @@ func TestCreateJWT(t *testing.T) {
 		Convey("iatが格納されていること", func() {
 			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
 		})
-
 	})
 }

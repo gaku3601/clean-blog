@@ -32,6 +32,6 @@ func (controller *UserController) Create(c Context) {
 }
 
 func (controller *UserController) SignIn(c Context) {
-	u := domain.NewUser("")
+	u := domain.NewUser(1, "", "")
 	c.JSON(200, u.JWT)
 }
