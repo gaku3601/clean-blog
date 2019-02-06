@@ -16,10 +16,6 @@ type User struct {
 	JWT          string
 }
 
-type Auth struct {
-	Token string
-}
-
 func NewUser(id int, email string, password string) *User {
 	u := &User{ID: id, Email: email, Password: password}
 	u.createHashPassword()
