@@ -50,3 +50,23 @@ func TestCreateJWT(t *testing.T) {
 		})
 	})
 }
+
+func TestValidation(t *testing.T) {
+	Convey("validation check", t, func() {
+		Convey("IDが格納されていない時、errorが返却される", func() {
+			u := &User{}
+			err := u.validation()
+			So(err.Error(), ShouldEqual, "IDを格納してください。")
+		})
+		Convey("Emailが格納されていない時、errorが返却される", func() {
+			u := &User{ID: 1}
+			err := u.validation()
+			So(err.Error(), ShouldEqual, "Emailを格納してください。")
+		})
+		Convey("Passwordが格納されていない時、errorが返却される", func() {
+			u := &User{ID: 1, Email: "aaaa"}
+			err := u.validation()
+			So(err.Error(), ShouldEqual, "Passwordを格納してください。")
+		})
+	})
+}

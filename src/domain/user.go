@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"errors"
 	"log"
 	"time"
 
@@ -21,6 +22,19 @@ func NewUser(id int, email string, password string) *User {
 	u.createHashPassword()
 	u.createJWT()
 	return u
+}
+
+func (u *User) validation() error {
+	if u.ID == 0 {
+		return errors.New("IDを格納してください。")
+	}
+	if u.Email == "" {
+		return errors.New("Emailを格納してください。")
+	}
+	if u.Password == "" {
+		return errors.New("Passwordを格納してください。")
+	}
+	return nil
 }
 
 func (u *User) createHashPassword() {
