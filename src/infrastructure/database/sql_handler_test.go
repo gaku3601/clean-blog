@@ -11,15 +11,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-var localDatabaseEnv string
-
-func TestMain(m *testing.M) {
-	//前処理
-	localDatabaseEnv = os.Getenv("DATABASE")
-	code := m.Run()
-	os.Exit(code)
-}
-
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {
 		os.Setenv("DATABASE", "testset")
@@ -44,7 +35,7 @@ func TestFetchDatabaseEnv(t *testing.T) {
 
 func TestInsertUser(t *testing.T) {
 	// DB周りの前処理
-	db, err := sql.Open("postgres", "postgres://postgres:mysecretpassword1234@localhost:5432/testdb?sslmode=disable")
+	db, err := sql.Open("postgres", fetchEnvDATABASE_TEST())
 	if err != nil {
 		panic(err)
 	}
@@ -52,7 +43,7 @@ func TestInsertUser(t *testing.T) {
 	db.Exec("CREATE TABLE users (id SERIAL PRIMARY KEY, email varchar(50) NOT NULL, password  char(60) NOT NULL, UNIQUE(email));")
 	Convey("Userが格納可能か検証", t, func() {
 		// 関数テスト
-		conn, _ := sql.Open("postgres", "postgres://postgres:mysecretpassword1234@localhost:5432/testdb?sslmode=disable")
+		conn, _ := sql.Open("postgres", fetchEnvDATABASE_TEST())
 		s := &SqlHandler{conn}
 		s.InsertUser("ex@example.com", "p@ssword")
 		// 検証
@@ -66,4 +57,12 @@ func TestInsertUser(t *testing.T) {
 	//あと処理
 	db.Exec("drop schema public cascade;")
 	db.Exec("create schema public;")
+}
+
+func fetchEnvDATABASE_TEST() (env string) {
+	env = os.Getenv("DATABASE_TEST")
+	if env == "" {
+		panic("$DATABASE_TEST環境変数を設定してください。")
+	}
+	return
 }
