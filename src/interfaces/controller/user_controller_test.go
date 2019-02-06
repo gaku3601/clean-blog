@@ -4,7 +4,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gaku3601/clean-blog/src/domain"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -16,8 +15,8 @@ func TestSignIn(t *testing.T) {
 		Convey("200が返却されること", func() {
 			So(c.status, ShouldEqual, 200)
 		})
-		Convey("Auth structが返却されること", func() {
-			So(reflect.TypeOf(c.content), ShouldEqual, reflect.TypeOf(new(domain.Auth)))
+		Convey("jwt tokenが返却されること", func() {
+			So(reflect.TypeOf(c.content), ShouldEqual, reflect.TypeOf(""))
 		})
 	})
 }
