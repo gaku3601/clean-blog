@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -35,12 +34,8 @@ func TestFetchDatabaseEnv(t *testing.T) {
 }
 
 func TestInsertUser(t *testing.T) {
-	// DB周りの前処理
-	db, err := sql.Open("postgres", fetchDatabaseTestEnv())
-	if err != nil {
-		panic(err)
-	}
-	exec.Command("goose", "-dir", "/Users/gaku/src/github.com/gaku3601/clean-blog/migration", "postgres", "postgres://postgres:mysecretpassword1234@localhost:5432/testdb?sslmode=disable", "up").Run()
+	db := setup()
+	defer tearDown()
 	Convey("Userが格納可能か検証", t, func() {
 		// 関数テスト
 		conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
@@ -49,12 +44,9 @@ func TestInsertUser(t *testing.T) {
 		// 検証
 		var Email string
 		var Password string
-		fmt.Println(db)
-		err := db.QueryRow("select email, password from users where id = 1").Scan(&Email, &Password)
-		fmt.Println(err)
+		db.QueryRow("select email, password from users where id = 1").Scan(&Email, &Password)
 		So(Email, ShouldEqual, "ex@example.com")
 	})
-	exec.Command("goose", "-dir", "/Users/gaku/src/github.com/gaku3601/clean-blog/migration", "postgres", "postgres://postgres:mysecretpassword1234@localhost:5432/testdb?sslmode=disable", "down").Run()
 }
 
 func fetchDatabaseTestEnv() (env string) {
@@ -63,4 +55,25 @@ func fetchDatabaseTestEnv() (env string) {
 		panic("$DATABASE_TEST環境変数を設定してください。")
 	}
 	return
+}
+
+func setup() *sql.DB {
+	db, err := sql.Open("postgres", fetchDatabaseTestEnv())
+	if err != nil {
+		panic(err)
+	}
+	exec.Command("goose", "-dir", getMigrationDir(), "postgres", fetchDatabaseTestEnv(), "up").Run()
+	return db
+}
+
+func tearDown() {
+	exec.Command("goose", "-dir", getMigrationDir(), "postgres", fetchDatabaseTestEnv(), "reset").Run()
+}
+
+func getMigrationDir() string {
+	m := os.Getenv("MIGRATION_DIR")
+	if m == "" {
+		panic("$MIGRATION_DIRを環境変数として設定してください。")
+	}
+	return m
 }
