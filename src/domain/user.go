@@ -17,11 +17,15 @@ type User struct {
 	JWT          string
 }
 
-func NewUser(id int, email string, password string) *User {
+func NewUser(id int, email string, password string) (*User, error) {
 	u := &User{ID: id, Email: email, Password: password}
+	err := u.validation()
+	if err != nil {
+		return nil, err
+	}
 	u.createHashPassword()
 	u.createJWT()
-	return u
+	return u, nil
 }
 
 func (u *User) validation() error {

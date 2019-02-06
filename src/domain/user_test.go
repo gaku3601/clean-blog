@@ -9,12 +9,17 @@ import (
 
 func TestUser(t *testing.T) {
 	Convey("Userが生成された際", t, func() {
-		u := NewUser(1, "email", "password")
 		Convey("HashPasswordも格納されるか", func() {
+			u, _ := NewUser(1, "email", "password")
 			So(len(u.HashPassword), ShouldEqual, 60)
 		})
 		Convey("JWTも格納されるか", func() {
+			u, _ := NewUser(1, "email", "password")
 			So(len(u.JWT), ShouldNotBeEmpty)
+		})
+		Convey("validationが効くか", func() {
+			_, err := NewUser(1, "", "password")
+			So(err, ShouldNotBeNil)
 		})
 	})
 
