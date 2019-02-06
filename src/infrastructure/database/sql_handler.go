@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 
 	_ "github.com/lib/pq"
@@ -34,6 +35,8 @@ func fetchDatabaseEnv() (d string) {
 }
 
 func (handler *SqlHandler) InsertUser(email string, password string) (err error) {
+	_, err = handler.Conn.Exec("Insert Into users (email, password) values ($1, $2);", email, password)
+	fmt.Println(err)
 	return nil
 }
 
