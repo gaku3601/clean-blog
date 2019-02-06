@@ -18,7 +18,7 @@ func TestNewSqlHandler(t *testing.T) {
 			err := recover()
 			So(err, ShouldEqual, "DBと接続できませんでした。接続内容を確認してください。")
 		}()
-		NewSqlHandler()
+		NewSQLHandler()
 	})
 }
 
@@ -35,7 +35,7 @@ func TestFetchDatabaseEnv(t *testing.T) {
 
 func TestInsertUser(t *testing.T) {
 	// DB周りの前処理
-	db, err := sql.Open("postgres", fetchEnvDATABASE_TEST())
+	db, err := sql.Open("postgres", fetchDatabaseTestEnv())
 	if err != nil {
 		panic(err)
 	}
@@ -43,8 +43,8 @@ func TestInsertUser(t *testing.T) {
 	db.Exec("CREATE TABLE users (id SERIAL PRIMARY KEY, email varchar(50) NOT NULL, password  char(60) NOT NULL, UNIQUE(email));")
 	Convey("Userが格納可能か検証", t, func() {
 		// 関数テスト
-		conn, _ := sql.Open("postgres", fetchEnvDATABASE_TEST())
-		s := &SqlHandler{conn}
+		conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
+		s := &SQLHandler{conn}
 		s.InsertUser("ex@example.com", "p@ssword")
 		// 検証
 		var Email string
@@ -59,7 +59,7 @@ func TestInsertUser(t *testing.T) {
 	db.Exec("create schema public;")
 }
 
-func fetchEnvDATABASE_TEST() (env string) {
+func fetchDatabaseTestEnv() (env string) {
 	env = os.Getenv("DATABASE_TEST")
 	if env == "" {
 		panic("$DATABASE_TEST環境変数を設定してください。")

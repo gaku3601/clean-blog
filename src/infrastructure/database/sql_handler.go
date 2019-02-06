@@ -5,23 +5,22 @@ import (
 	"fmt"
 	"os"
 
-	_ "github.com/lib/pq"
-
 	"github.com/gaku3601/clean-blog/src/interfaces/database"
 )
 
-type SqlHandler struct {
+type SQLHandler struct {
 	Conn *sql.DB
 }
 
-func NewSqlHandler() database.SqlHandler {
+// NewSQLHandler : SQLHandlerを返却します
+func NewSQLHandler() database.SqlHandler {
 	connector := fetchDatabaseEnv()
 	conn, _ := sql.Open("postgres", connector)
 	err := conn.Ping()
 	if err != nil {
 		panic("DBと接続できませんでした。接続内容を確認してください。")
 	}
-	sqlHandler := new(SqlHandler)
+	sqlHandler := new(SQLHandler)
 	sqlHandler.Conn = conn
 	return sqlHandler
 }
@@ -34,7 +33,7 @@ func fetchDatabaseEnv() (d string) {
 	return
 }
 
-func (handler *SqlHandler) InsertUser(email string, password string) (err error) {
+func (handler *SQLHandler) InsertUser(email string, password string) (err error) {
 	_, err = handler.Conn.Exec("Insert Into users (email, password) values ($1, $2);", email, password)
 	fmt.Println(err)
 	return nil
