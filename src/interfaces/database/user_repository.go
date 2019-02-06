@@ -7,11 +7,6 @@ type UserRepository struct {
 }
 
 func (repo *UserRepository) Store(u domain.User) (err error) {
-	_, err = repo.Execute(
-		"INSERT INTO users (first_name, last_name) VALUES (?,?)", u.FirstName, u.LastName,
-	)
-	if err != nil {
-		return
-	}
+	err = repo.InsertUser(u.Email, u.Password)
 	return
 }

@@ -37,16 +37,12 @@ func TestFetchDatabaseEnv(t *testing.T) {
 	})
 }
 
-func TestExecute(t *testing.T) {
-	Convey("実行時、errorが発生する場合、適切にerrorが返却されているか。", t, func() {
-		os.Setenv("DATABASE", localDatabaseEnv)
-		h := NewSqlHandler()
-		h.Execute("CREATE TABLE users(id    CHAR(4)    NOT NULL);")
-		_, err := h.Execute("CREATE TABLE users(id    CHAR(4)    NOT NULL);")
-		So(err.Error(), ShouldEqual, `pq: relation "users" already exists`)
-
-		// すべてのtableをdropする処理
-		h.Execute("drop schema public cascade;")
-		h.Execute("create schema public;")
+func TestInsertUser(t *testing.T) {
+	Convey("Userが格納可能か検証", t, func() {
+		/*
+			// すべてのtableをdropする処理
+			h.Execute("drop schema public cascade;")
+			h.Execute("create schema public;")
+		*/
 	})
 }

@@ -33,6 +33,11 @@ func fetchDatabaseEnv() (d string) {
 	return
 }
 
+func (handler *SqlHandler) InsertUser(email string, password string) (err error) {
+	return nil
+}
+
+/*
 type SqlResult struct {
 	Result sql.Result
 }
@@ -54,3 +59,4 @@ func (r SqlResult) LastInsertId() (int64, error) {
 func (r SqlResult) RowsAffected() (int64, error) {
 	return r.Result.RowsAffected()
 }
+*/
