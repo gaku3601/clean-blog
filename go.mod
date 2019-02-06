@@ -11,6 +11,7 @@ require (
 	github.com/smartystreets/assertions v0.0.0-20190116191733-b6c0e53d7304 // indirect
 	github.com/smartystreets/goconvey v0.0.0-20181108003508-044398e4856c
 	github.com/ugorji/go/codec v0.0.0-20190204201341-e444a5086c43 // indirect
+	golang.org/x/crypto v0.0.0-20190131182504-b8fe1690c613
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
