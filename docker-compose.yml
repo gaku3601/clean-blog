@@ -1,11 +1,19 @@
 version: "3"
 
 services:
-  db:
+  devdb:
     image: postgres:10
     ports:
-      - "5432:5432"
+      - "4444:5432"
     environment:
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=mysecretpassword1234"
-      - "POSTGRES_DB=testdb"
+      - "POSTGRES_DB=db"
+  testdb:
+    image: postgres:10
+    ports:
+      - "5555:5432"
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=mysecretpassword1234"
+      - "POSTGRES_DB=db"
