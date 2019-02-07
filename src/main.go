@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	router.Router.Run()
+	router.Start()
 }

@@ -6,15 +6,20 @@ import (
 	gin "github.com/gin-gonic/gin"
 )
 
-// Router ルーター
-var Router *gin.Engine
+type Context struct{ *gin.Context }
 
-type Context struct{}
+func (c *Context) ParamsCreate() (email string, password string) {
+	type Json struct {
+		Email string `json:"email" binding:"required"`
+	}
+	var j Json
+	c.BindJSON(&j)
+	email = j.Email
+	return
+}
+func (c *Context) JSON(status int, content interface{}) {}
 
-func (c *Context) ParamsCreate() (email string, password string) { return "", "" }
-func (c *Context) JSON(status int, content interface{})          {}
-
-func init() {
+func Start() {
 	router := gin.Default()
 
 	userController := controller.NewUserController(database.NewSQLHandler())
@@ -28,5 +33,5 @@ func init() {
 		userController.SignIn(con)
 	})
 
-	Router = router
+	router.Run()
 }
