@@ -14,7 +14,7 @@ type SQLHandler struct {
 }
 
 // NewSQLHandler : SQLHandlerを返却します
-func NewSQLHandler() database.SqlHandler {
+func NewSQLHandler() database.SQLHandler {
 	connector := fetchDatabaseEnv()
 	conn, _ := sql.Open("postgres", connector)
 	err := conn.Ping()

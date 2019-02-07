@@ -10,7 +10,7 @@ type UserController struct {
 	*usecase.UserUsecase
 }
 
-func NewUserController(sqlHandler database.SqlHandler) *UserController {
+func NewUserController(sqlHandler database.SQLHandler) *UserController {
 	return &UserController{
 		&usecase.UserUsecase{
 			&database.UserRepository{

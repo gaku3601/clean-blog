@@ -1,5 +1,5 @@
 package database
 
-type SqlHandler interface {
+type SQLHandler interface {
 	InsertUser(email string, password string) error
 }
