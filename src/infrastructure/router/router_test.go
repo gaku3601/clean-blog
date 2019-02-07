@@ -2,6 +2,8 @@ package router
 
 import (
 	"bytes"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -18,6 +20,29 @@ func TestContext(t *testing.T) {
 			con := &Context{c}
 			email, _ := con.ParamsCreate()
 			So(email, ShouldEqual, "ex@example.com")
+		})
+	})
+	Convey("JSON()のテスト", t, func() {
+		Convey("正常にJSONが送信されるかどうか", func() {
+			r := httptest.NewRecorder()
+			c, _ := gin.CreateTestContext(r)
+			con := &Context{c}
+
+			type Restaurant struct {
+				Id   int    `json:"id"`
+				Name string `json:"name"`
+			}
+			restaurant := Restaurant{
+				Id:   3,
+				Name: "サイゼリヤ",
+			}
+			con.JSON(200, restaurant)
+
+			// 結果を受け取り確認
+			body, _ := ioutil.ReadAll(r.Result().Body)
+			var restau Restaurant
+			json.Unmarshal(body, &restau)
+			So(restau.Id, ShouldEqual, 3)
 		})
 	})
 }

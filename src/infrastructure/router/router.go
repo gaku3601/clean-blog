@@ -6,18 +6,20 @@ import (
 	gin "github.com/gin-gonic/gin"
 )
 
-type Context struct{ *gin.Context }
+type Context struct{ gin *gin.Context }
 
 func (c *Context) ParamsCreate() (email string, password string) {
 	type Json struct {
 		Email string `json:"email" binding:"required"`
 	}
 	var j Json
-	c.BindJSON(&j)
+	c.gin.BindJSON(&j)
 	email = j.Email
 	return
 }
-func (c *Context) JSON(status int, content interface{}) {}
+func (c *Context) JSON(status int, content interface{}) {
+	c.gin.JSON(status, content)
+}
 
 func Start() {
 	router := gin.Default()
