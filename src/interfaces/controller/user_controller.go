@@ -7,14 +7,14 @@ import (
 )
 
 type UserController struct {
-	use usecase.UserUsecase
+	*usecase.UserUsecase
 }
 
 func NewUserController(sqlHandler database.SqlHandler) *UserController {
 	return &UserController{
-		use: usecase.UserUsecase{
+		&usecase.UserUsecase{
 			&database.UserRepository{
-				SqlHandler: sqlHandler,
+				sqlHandler,
 			},
 		},
 	}
@@ -23,7 +23,7 @@ func NewUserController(sqlHandler database.SqlHandler) *UserController {
 func (controller *UserController) Create(c Context) {
 	u := domain.User{}
 	c.Bind(&u)
-	err := controller.use.Add("email", "password")
+	err := controller.Add("email", "password")
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
