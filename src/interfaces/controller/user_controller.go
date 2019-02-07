@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/gaku3601/clean-blog/src/domain"
 	"github.com/gaku3601/clean-blog/src/interfaces/database"
 	"github.com/gaku3601/clean-blog/src/usecase"
 )
@@ -31,7 +30,11 @@ func (controller *UserController) Create(c Context) {
 }
 
 func (controller *UserController) SignIn(c Context) {
-	// TODO: ドメインへのアクセスをやめたい
-	u := domain.User{}
-	c.JSON(200, u.JWT)
+	email, password := c.UserParams()
+	token, err := controller.FetchJWT(email, password)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, token)
 }

@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"github.com/gaku3601/clean-blog/src/interfaces/database"
+	// PostgreSQL driver
+	_ "github.com/lib/pq"
 )
 
 // SQLHandler ハンドラー

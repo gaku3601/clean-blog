@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"reflect"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -9,16 +8,22 @@ import (
 
 func TestSignIn(t *testing.T) {
 	Convey("SignIn()処理のテスト", t, func() {
-		u := new(UserController)
-		c := new(testContext)
-		u.SignIn(c)
+		c := NewUserController(&testSqlHandler{})
+		con := new(testContext)
+		c.SignIn(con)
 		Convey("200が返却されること", func() {
-			So(c.status, ShouldEqual, 200)
+			So(con.status, ShouldEqual, 200)
 		})
 		Convey("jwt tokenが返却されること", func() {
-			So(reflect.TypeOf(c.content), ShouldEqual, reflect.TypeOf(""))
+			So(con.content, ShouldNotBeEmpty)
 		})
 	})
+}
+
+type testSqlHandler struct{}
+
+func (s *testSqlHandler) InsertUser(email string, password string) error {
+	return nil
 }
 
 type testContext struct {
@@ -26,7 +31,7 @@ type testContext struct {
 	content interface{}
 }
 
-func (t *testContext) UserParams() (email string, password string) { return "", "" }
+func (t *testContext) UserParams() (email string, password string) { return "test", "aaa" }
 func (t *testContext) JSON(status int, content interface{}) {
 	t.status = status
 	t.content = content

@@ -11,5 +11,5 @@ func (repo *UserRepository) Store(email string, password string) (err error) {
 
 func (repo *UserRepository) CheckExistUser(email string, password string) (id int, err error) {
 	// TODO: 実装する
-	return 0, nil
+	return 1, nil
 }
