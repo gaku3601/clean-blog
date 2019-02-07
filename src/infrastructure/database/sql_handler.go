@@ -42,3 +42,8 @@ func (handler *SQLHandler) InsertUser(email string, password string) (err error)
 	fmt.Println(err)
 	return nil
 }
+
+func (handler *SQLHandler) FetchUserID(email string, password string) (id int, err error) {
+	// TODO: 実装する
+	return 0, nil
+}
