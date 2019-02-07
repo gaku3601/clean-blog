@@ -3,6 +3,7 @@ package usecase
 import (
 	"testing"
 
+	"github.com/dgrijalva/jwt-go"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -17,12 +18,26 @@ func TestAdd(t *testing.T) {
 }
 
 func TestFetchJWT(t *testing.T) {
-	Convey("FetchJWT()でtokenが返却されること", t, func() {
+	Convey("FetchJWT()でtokenが返却されることを確認する", t, func() {
 		r := new(testRepo)
 		u := &UserUsecase{r}
-		token, _ := u.FetchJWT("email", "password")
+		t, _ := u.FetchJWT("ex@example.com", "password")
+		token, _ := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
+			return []byte("foobar"), nil
+		})
 
-		So(token, ShouldNotBeEmpty)
+		Convey("emailが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["email"], ShouldEqual, "ex@example.com")
+		})
+		Convey("idが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
+		})
+		Convey("expが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["exp"], ShouldNotBeNil)
+		})
+		Convey("iatが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
+		})
 	})
 }
 

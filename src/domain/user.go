@@ -2,10 +2,7 @@ package domain
 
 import (
 	"errors"
-	"log"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -14,7 +11,6 @@ type User struct {
 	Email        string
 	Password     string
 	HashPassword string
-	JWT          string
 }
 
 func NewUser(id int, email string, password string) (*User, error) {
@@ -24,7 +20,6 @@ func NewUser(id int, email string, password string) (*User, error) {
 		return nil, err
 	}
 	u.createHashPassword()
-	u.createJWT()
 	return u, nil
 }
 
@@ -44,19 +39,4 @@ func (u *User) validation() error {
 func (u *User) createHashPassword() {
 	hash, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	u.HashPassword = string(hash)
-}
-
-// CreateJWT JWTトークンを作成します。
-func (u *User) createJWT() {
-	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-		"id":    u.ID,
-		"email": u.Email,
-		"exp":   time.Now().Add(time.Hour * 24).Unix(),
-		"iat":   time.Now(),
-	})
-	tokenstring, err := token.SignedString([]byte("foobar"))
-	if err != nil {
-		log.Fatalln(err)
-	}
-	u.JWT = tokenstring
 }
