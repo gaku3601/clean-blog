@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // UserUsecase ユースケースstruct
@@ -13,7 +14,8 @@ type UserUsecase struct {
 
 // Add ユーザを追加します。
 func (u *UserUsecase) Add(email string, password string) (err error) {
-	err = u.Store(email, password)
+	h := createHashPassword(password)
+	err = u.Store(email, h)
 	return
 }
 
@@ -34,5 +36,11 @@ func (u *UserUsecase) FetchJWT(email string, password string) (tokenstring strin
 	if err != nil {
 		return "", err
 	}
+	return
+}
+
+func createHashPassword(password string) (hashPassword string) {
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashPassword = string(hash)
 	return
 }

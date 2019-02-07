@@ -2,15 +2,12 @@ package domain
 
 import (
 	"errors"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	ID           int
-	Email        string
-	Password     string
-	HashPassword string
+	ID       int
+	Email    string
+	Password string
 }
 
 func NewUser(id int, email string, password string) (*User, error) {
@@ -19,7 +16,6 @@ func NewUser(id int, email string, password string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	u.createHashPassword()
 	return u, nil
 }
 
@@ -34,9 +30,4 @@ func (u *User) validation() error {
 		return errors.New("Passwordを格納してください。")
 	}
 	return nil
-}
-
-func (u *User) createHashPassword() {
-	hash, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
-	u.HashPassword = string(hash)
 }
