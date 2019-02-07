@@ -24,14 +24,15 @@ func Start() {
 
 	userController := controller.NewUserController(database.NewSQLHandler())
 
-	router.POST("/users", func(c *gin.Context) {
-		con := &Context{}
-		userController.Create(con)
-	})
-	router.POST("/signin", func(c *gin.Context) {
-		con := &Context{}
-		userController.SignIn(con)
-	})
+	router.POST("/users", nomal(userController.Create))
+	router.POST("/signin", nomal(userController.SignIn))
 
 	router.Run()
+}
+
+func nomal(f func(controller.Context)) func(*gin.Context) {
+	return func(c *gin.Context) {
+		con := &Context{c}
+		f(con)
+	}
 }
