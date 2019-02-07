@@ -1,16 +1,12 @@
 package usecase
 
-import (
-	"github.com/gaku3601/clean-blog/src/domain"
-)
-
 // UserUsecase ユースケースstruct
 type UserUsecase struct {
-	Repo UserRepository
+	UserRepository
 }
 
 // Add ユーザを追加します。
-func (u *UserUsecase) Add(d domain.User) (err error) {
-	err = u.Repo.Store(d)
+func (u *UserUsecase) Add(email string, password string) (err error) {
+	err = u.Store(email, password)
 	return
 }
