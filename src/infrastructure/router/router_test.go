@@ -21,6 +21,13 @@ func TestContext(t *testing.T) {
 			email, _ := con.ParamsCreate()
 			So(email, ShouldEqual, "ex@example.com")
 		})
+		Convey("passwordが返却されているかどうか", func() {
+			c, _ := gin.CreateTestContext(httptest.NewRecorder())
+			c.Request, _ = http.NewRequest("POST", "/", bytes.NewBuffer([]byte(`{"password": "pass"}`)))
+			con := &Context{c}
+			_, pass := con.ParamsCreate()
+			So(pass, ShouldEqual, "pass")
+		})
 	})
 	Convey("JSON()のテスト", t, func() {
 		Convey("正常にJSONが送信されるかどうか", func() {
