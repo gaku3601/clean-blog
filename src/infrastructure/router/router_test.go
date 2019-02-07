@@ -18,14 +18,14 @@ func TestContext(t *testing.T) {
 			c, _ := gin.CreateTestContext(httptest.NewRecorder())
 			c.Request, _ = http.NewRequest("POST", "/", bytes.NewBuffer([]byte(`{"email": "ex@example.com"}`)))
 			con := &Context{c}
-			email, _ := con.ParamsCreate()
+			email, _ := con.UserParams()
 			So(email, ShouldEqual, "ex@example.com")
 		})
 		Convey("passwordが返却されているかどうか", func() {
 			c, _ := gin.CreateTestContext(httptest.NewRecorder())
 			c.Request, _ = http.NewRequest("POST", "/", bytes.NewBuffer([]byte(`{"password": "pass"}`)))
 			con := &Context{c}
-			_, pass := con.ParamsCreate()
+			_, pass := con.UserParams()
 			So(pass, ShouldEqual, "pass")
 		})
 	})

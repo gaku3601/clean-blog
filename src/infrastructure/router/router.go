@@ -8,7 +8,7 @@ import (
 
 type Context struct{ gin *gin.Context }
 
-func (c *Context) ParamsCreate() (email string, password string) {
+func (c *Context) UserParams() (email string, password string) {
 	type Json struct {
 		Email    string `json:"email" binding:"required"`
 		Password string `json:"password" binding:"required"`

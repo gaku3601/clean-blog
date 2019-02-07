@@ -21,7 +21,7 @@ func NewUserController(sqlHandler database.SQLHandler) *UserController {
 }
 
 func (controller *UserController) Create(c Context) {
-	email, password := c.ParamsCreate()
+	email, password := c.UserParams()
 	err := controller.Add(email, password)
 	if err != nil {
 		c.JSON(500, err.Error())
@@ -31,6 +31,7 @@ func (controller *UserController) Create(c Context) {
 }
 
 func (controller *UserController) SignIn(c Context) {
+	// TODO: ドメインへのアクセスをやめたい
 	u := domain.User{}
 	c.JSON(200, u.JWT)
 }

@@ -26,7 +26,7 @@ type testContext struct {
 	content interface{}
 }
 
-func (t *testContext) ParamsCreate() (email string, password string) { return "", "" }
+func (t *testContext) UserParams() (email string, password string) { return "", "" }
 func (t *testContext) JSON(status int, content interface{}) {
 	t.status = status
 	t.content = content
