@@ -1,8 +1,6 @@
 package controller
 
 type Context interface {
-	Param(string) string
-	Bind(interface{}) error
-	Status(int)
+	ParamsCreate() (email string, password string)
 	JSON(int, interface{})
 }
