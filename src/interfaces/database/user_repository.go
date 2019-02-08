@@ -23,3 +23,8 @@ func (repo *UserRepository) CreateSocialProfile(servise string, email string, ui
 	// TODO: あとで実装する
 	return nil
 }
+
+func (repo *UserRepository) CheckExistSocialProfile(servise string, uid string) (userID int, err error) {
+	// TODO: あとで実装する
+	return
+}

@@ -15,8 +15,8 @@ type User struct {
 	ValidEmail bool
 }
 
-func NewUser(email string, password string) (*User, error) {
-	u := &User{Email: email, Password: password}
+func NewUser(email string) (*User, error) {
+	u := &User{Email: email}
 	err := u.validation()
 	if err != nil {
 		return nil, err
@@ -27,9 +27,6 @@ func NewUser(email string, password string) (*User, error) {
 func (u *User) validation() error {
 	if u.Email == "" {
 		return errors.New("Emailを格納してください。")
-	}
-	if u.Password == "" {
-		return errors.New("Passwordを格納してください。")
 	}
 	return nil
 }
@@ -49,8 +46,8 @@ func (u *User) CreateJWT(id int) (string, error) {
 	return tokenstring, nil
 }
 
-func (u *User) CreateHashPassword() (hashPassword string) {
-	hash, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+func (u *User) CreateHashPassword(password string) (hashPassword string) {
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hashPassword = string(hash)
 	return
 }

@@ -11,11 +11,11 @@ type UserUsecase struct {
 
 // Add ユーザを追加します。
 func (u *UserUsecase) Add(email string, password string) error {
-	d, err := domain.NewUser(email, password)
+	d, err := domain.NewUser(email)
 	if err != nil {
 		return err
 	}
-	h := d.CreateHashPassword()
+	h := d.CreateHashPassword(password)
 	err = u.Store(d.Email, h)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func (u *UserUsecase) FetchJWT(email string, password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	d, err := domain.NewUser(email, password)
+	d, err := domain.NewUser(email)
 	if err != nil {
 		return "", err
 	}
@@ -50,7 +50,18 @@ const (
 	google ServiseEnum = "google"
 )
 
-func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) error {
-	err := u.CreateSocialProfile(string(servise), email, uid)
-	return err
+func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (string, error) {
+	userID, err := u.CheckExistSocialProfile(string(servise), uid)
+	if err != nil {
+		return "", err
+	}
+	d, err := domain.NewUser(email)
+	if err != nil {
+		return "", err
+	}
+	token, err := d.CreateJWT(userID)
+	if err != nil {
+		return "", err
+	}
+	return token, err
 }

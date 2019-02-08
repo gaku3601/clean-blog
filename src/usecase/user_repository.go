@@ -6,4 +6,5 @@ type UserRepository interface {
 	CheckExistUser(email string, password string) (id int, err error)
 	UpdateValidEmail(email string) error
 	CreateSocialProfile(servise string, email string, uid string) error
+	CheckExistSocialProfile(servise string, uid string) (userID int, err error)
 }
