@@ -16,7 +16,7 @@ func (u *UserUsecase) Add(email string, password string) error {
 		return err
 	}
 	h := d.CreateHashPassword(password)
-	_, err = u.Store(d.Email, h)
+	_, err = u.StoreUser(d.Email, h)
 	if err != nil {
 		return err
 	}
@@ -55,7 +55,7 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 	if err != nil && err.Error() == "No Data" {
 		userID, err := u.CheckExistUser(email)
 		if err != nil && err.Error() == "No Data" {
-			userID, err := u.Store(email, "")
+			userID, err := u.StoreUser(email, "")
 			if err != nil {
 				return "", err
 			}

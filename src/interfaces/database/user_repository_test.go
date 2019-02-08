@@ -10,7 +10,7 @@ func TestStore(t *testing.T) {
 	Convey("Store()のtest", t, func() {
 		Convey("登録に成功した場合、err=nilが格納されていること", func() {
 			u := &UserRepository{&testSqlHandler{}}
-			_, err := u.Store("ex@example.com", "test")
+			_, err := u.StoreUser("ex@example.com", "test")
 			So(err, ShouldBeNil)
 		})
 	})

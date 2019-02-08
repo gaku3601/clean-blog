@@ -47,7 +47,7 @@ func TestCertificationSocialProfile(t *testing.T) {
 
 type testRepo struct{}
 
-func (r *testRepo) Store(email string, password string) (id int, err error) {
+func (r *testRepo) StoreUser(email string, password string) (id int, err error) {
 	return 0, nil
 }
 
