@@ -1,9 +1,7 @@
 package usecase
 
 import (
-	"time"
-
-	"github.com/dgrijalva/jwt-go"
+	"github.com/gaku3601/clean-blog/src/domain"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,24 +17,21 @@ func (u *UserUsecase) Add(email string, password string) (err error) {
 	return
 }
 
-func (u *UserUsecase) FetchJWT(email string, password string) (tokenstring string, err error) {
+func (u *UserUsecase) FetchJWT(email string, password string) (string, error) {
 	id, err := u.CheckExistUser(email, password)
 	if err != nil {
 		return "", err
 	}
-
-	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-		"id":    id,
-		"email": email,
-		"exp":   time.Now().Add(time.Hour * 24).Unix(),
-		"iat":   time.Now(),
-	})
-	tokenstring, err = token.SignedString([]byte("foobar"))
-
+	d, err := domain.NewUser(email, password)
 	if err != nil {
 		return "", err
 	}
-	return
+	token, err := d.CreateJWT(id)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
+
 }
 
 func createHashPassword(password string) (hashPassword string) {
