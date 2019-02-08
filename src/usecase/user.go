@@ -43,3 +43,14 @@ func (u *UserUsecase) ActivationEmail(email string) error {
 	err := u.UpdateValidEmail(email)
 	return err
 }
+
+type ServiseEnum string
+
+const (
+	google ServiseEnum = "google"
+)
+
+func (u *UserUsecase) AddSocialProfile(servise ServiseEnum, email string, uid string) error {
+	err := u.CreateSocialProfile(string(servise), email, uid)
+	return err
+}
