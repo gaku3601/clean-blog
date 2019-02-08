@@ -37,5 +37,9 @@ func (u *UserUsecase) FetchJWT(email string, password string) (string, error) {
 		return "", err
 	}
 	return token, nil
+}
 
+func (u *UserUsecase) ActivationEmail(email string) error {
+	err := u.UpdateValidEmail(email)
+	return err
 }

@@ -13,3 +13,8 @@ func (repo *UserRepository) CheckExistUser(email string, password string) (id in
 	id, err = repo.FetchUserID(email, password)
 	return
 }
+
+func (repo *UserRepository) UpdateValidEmail(email string) (err error) {
+	// TODO: あとで実装する
+	return nil
+}

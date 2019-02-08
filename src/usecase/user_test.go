@@ -16,6 +16,15 @@ func TestAdd(t *testing.T) {
 	})
 }
 
+func TestUpdateValidEmail(t *testing.T) {
+	Convey("UpdateValidEmail()で更新処理に成功した時、nilが返却されること", t, func() {
+		r := new(testRepo)
+		u := &UserUsecase{r}
+		err := u.ActivationEmail("ex@example.com")
+		So(err, ShouldBeNil)
+	})
+}
+
 type testRepo struct{}
 
 func (r *testRepo) Store(email string, password string) error {
@@ -24,4 +33,8 @@ func (r *testRepo) Store(email string, password string) error {
 
 func (r *testRepo) CheckExistUser(email string, password string) (int, error) {
 	return 1, nil
+}
+
+func (r *testRepo) UpdateValidEmail(email string) error {
+	return nil
 }
