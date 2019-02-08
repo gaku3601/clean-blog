@@ -14,7 +14,6 @@ func TestUser(t *testing.T) {
 			So(err, ShouldNotBeNil)
 		})
 	})
-
 }
 
 func TestValidation(t *testing.T) {
@@ -53,5 +52,13 @@ func TestFetchJWT(t *testing.T) {
 		Convey("iatが格納されていること", func() {
 			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
 		})
+	})
+}
+
+func TestCreateHashPassword(t *testing.T) {
+	Convey("hash化されているか検証する", t, func() {
+		u := &User{Password: "password"}
+		hash := u.CreateHashPassword()
+		So(len(hash), ShouldEqual, 60)
 	})
 }

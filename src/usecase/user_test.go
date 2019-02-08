@@ -16,13 +16,6 @@ func TestAdd(t *testing.T) {
 	})
 }
 
-func TestCreateHashPassword(t *testing.T) {
-	Convey("hash化されているか検証する", t, func() {
-		hash := createHashPassword("password")
-		So(len(hash), ShouldEqual, 60)
-	})
-}
-
 type testRepo struct{}
 
 func (r *testRepo) Store(email string, password string) error {

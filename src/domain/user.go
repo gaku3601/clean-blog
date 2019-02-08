@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -46,4 +47,10 @@ func (u *User) CreateJWT(id int) (string, error) {
 		return "", err
 	}
 	return tokenstring, nil
+}
+
+func (u *User) CreateHashPassword() (hashPassword string) {
+	hash, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	hashPassword = string(hash)
+	return
 }
