@@ -59,12 +59,12 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 			if err != nil {
 				return "", err
 			}
-			u.CreateSocialProfile(string(servise), userID, uid)
+			u.StoreSocialProfile(string(servise), userID, uid)
 			return "", nil
 		} else if err != nil {
 			return "", err
 		}
-		err = u.CreateSocialProfile(string(servise), userID, uid)
+		err = u.StoreSocialProfile(string(servise), userID, uid)
 		if err != nil {
 			return "", err
 		}

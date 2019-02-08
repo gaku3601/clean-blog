@@ -25,7 +25,7 @@ func (repo *UserRepository) UpdateValidEmail(email string) (err error) {
 	return nil
 }
 
-func (repo *UserRepository) CreateSocialProfile(servise string, userID int, uid string) error {
+func (repo *UserRepository) StoreSocialProfile(servise string, userID int, uid string) error {
 	// TODO: あとで実装する
 	return nil
 }

@@ -68,7 +68,7 @@ func (r *testRepo) UpdateValidEmail(email string) error {
 	return nil
 }
 
-func (r *testRepo) CreateSocialProfile(servise string, userID int, uid string) error {
+func (r *testRepo) StoreSocialProfile(servise string, userID int, uid string) error {
 	return nil
 }
 func (r *testRepo) CheckExistSocialProfile(servise string, uid string) (userID int, err error) {
