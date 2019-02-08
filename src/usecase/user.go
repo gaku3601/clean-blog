@@ -16,7 +16,7 @@ func (u *UserUsecase) Add(email string, password string) error {
 		return err
 	}
 	h := d.CreateHashPassword(password)
-	err = u.Store(d.Email, h)
+	_, err = u.Store(d.Email, h)
 	if err != nil {
 		return err
 	}
@@ -50,18 +50,24 @@ const (
 	google ServiseEnum = "google"
 )
 
-func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (string, error) {
+func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error) {
 	userID, err := u.CheckExistSocialProfile(string(servise), uid)
 	if err != nil && err.Error() == "No Data" {
 		userID, err := u.CheckExistUser(email)
-		if err != nil {
+		if err != nil && err.Error() == "No Data" {
+			userID, err := u.Store(email, "")
+			if err != nil {
+				return "", err
+			}
+			u.CreateSocialProfile(string(servise), userID, uid)
+			return "", nil
+		} else if err != nil {
 			return "", err
 		}
 		err = u.CreateSocialProfile(string(servise), userID, uid)
 		if err != nil {
 			return "", err
 		}
-
 	} else if err != nil {
 		return "", err
 	}
@@ -69,7 +75,7 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 	if err != nil {
 		return "", err
 	}
-	token, err := d.CreateJWT(userID)
+	token, err = d.CreateJWT(userID)
 	if err != nil {
 		return "", err
 	}

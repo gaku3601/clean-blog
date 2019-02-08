@@ -4,7 +4,9 @@ type UserRepository struct {
 	SQLHandler
 }
 
-func (repo *UserRepository) Store(email string, password string) (err error) {
+func (repo *UserRepository) Store(email string, password string) (id int, err error) {
+	// TODO: ID返却処理を記述
+	id = 0
 	err = repo.InsertUser(email, password)
 	return
 }
