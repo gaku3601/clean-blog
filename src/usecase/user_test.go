@@ -16,13 +16,12 @@ func TestAdd(t *testing.T) {
 	})
 }
 
-func TestFetchJWT(t *testing.T) {
-	Convey("FetchJWT()でtokenが返却されること", t, func() {
+func TestUpdateValidEmail(t *testing.T) {
+	Convey("UpdateValidEmail()で更新処理に成功した時、nilが返却されること", t, func() {
 		r := new(testRepo)
 		u := &UserUsecase{r}
-		token, _ := u.FetchJWT("email", "password")
-
-		So(token, ShouldNotBeEmpty)
+		err := u.ActivationEmail("ex@example.com")
+		So(err, ShouldBeNil)
 	})
 }
 
@@ -34,4 +33,8 @@ func (r *testRepo) Store(email string, password string) error {
 
 func (r *testRepo) CheckExistUser(email string, password string) (int, error) {
 	return 1, nil
+}
+
+func (r *testRepo) UpdateValidEmail(email string) error {
+	return nil
 }

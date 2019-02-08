@@ -1,6 +1,8 @@
 package usecase
 
-import "github.com/gaku3601/clean-blog/src/domain"
+import (
+	"github.com/gaku3601/clean-blog/src/domain"
+)
 
 // UserUsecase ユースケースstruct
 type UserUsecase struct {
@@ -8,20 +10,36 @@ type UserUsecase struct {
 }
 
 // Add ユーザを追加します。
-func (u *UserUsecase) Add(email string, password string) (err error) {
-	err = u.Store(email, password)
-	return
+func (u *UserUsecase) Add(email string, password string) error {
+	d, err := domain.NewUser(email, password)
+	if err != nil {
+		return err
+	}
+	h := d.CreateHashPassword()
+	err = u.Store(d.Email, h)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (u *UserUsecase) FetchJWT(email string, password string) (token string, err error) {
+func (u *UserUsecase) FetchJWT(email string, password string) (string, error) {
 	id, err := u.CheckExistUser(email, password)
 	if err != nil {
 		return "", err
 	}
-	d, err := domain.NewUser(id, email, password)
+	d, err := domain.NewUser(email, password)
 	if err != nil {
 		return "", err
 	}
-	token = d.JWT
-	return
+	token, err := d.CreateJWT(id)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+func (u *UserUsecase) ActivationEmail(email string) error {
+	err := u.UpdateValidEmail(email)
+	return err
 }
