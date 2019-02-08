@@ -26,7 +26,7 @@ func (s *testSqlHandler) InsertUser(email string, password string) error {
 	return nil
 }
 
-func (s *testSqlHandler) FetchUserID(email string, password string) (id int, err error) {
+func (s *testSqlHandler) FetchUserID(email string) (id int, err error) {
 	id = 1
 	err = nil
 	return

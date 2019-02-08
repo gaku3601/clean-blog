@@ -43,7 +43,7 @@ func (handler *SQLHandler) InsertUser(email string, password string) (err error)
 	return nil
 }
 
-func (handler *SQLHandler) FetchUserID(email string, password string) (id int, err error) {
+func (handler *SQLHandler) FetchUserID(email string) (id int, err error) {
 	// TODO: 実装する
 	return 0, nil
 }

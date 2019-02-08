@@ -9,8 +9,12 @@ func (repo *UserRepository) Store(email string, password string) (err error) {
 	return
 }
 
-func (repo *UserRepository) CheckExistUser(email string, password string) (id int, err error) {
-	id, err = repo.FetchUserID(email, password)
+func (repo *UserRepository) CheckExistUser(email string) (id int, err error) {
+	id, err = repo.FetchUserID(email)
+	return
+}
+func (repo *UserRepository) CheckCertificationUser(email string, password string) (id int, err error) {
+	// TODO: あとで実装する
 	return
 }
 
@@ -19,7 +23,7 @@ func (repo *UserRepository) UpdateValidEmail(email string) (err error) {
 	return nil
 }
 
-func (repo *UserRepository) CreateSocialProfile(servise string, email string, uid string) error {
+func (repo *UserRepository) CreateSocialProfile(servise string, userID int, uid string) error {
 	// TODO: あとで実装する
 	return nil
 }

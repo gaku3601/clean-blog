@@ -24,7 +24,7 @@ func (u *UserUsecase) Add(email string, password string) error {
 }
 
 func (u *UserUsecase) FetchJWT(email string, password string) (string, error) {
-	id, err := u.CheckExistUser(email, password)
+	id, err := u.CheckCertificationUser(email, password)
 	if err != nil {
 		return "", err
 	}
@@ -52,7 +52,17 @@ const (
 
 func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (string, error) {
 	userID, err := u.CheckExistSocialProfile(string(servise), uid)
-	if err != nil {
+	if err != nil && err.Error() == "No Data" {
+		userID, err := u.CheckExistUser(email)
+		if err != nil {
+			return "", err
+		}
+		err = u.CreateSocialProfile(string(servise), userID, uid)
+		if err != nil {
+			return "", err
+		}
+
+	} else if err != nil {
 		return "", err
 	}
 	d, err := domain.NewUser(email)

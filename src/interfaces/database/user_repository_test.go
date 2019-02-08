@@ -17,7 +17,7 @@ func TestStore(t *testing.T) {
 	Convey("CheckExistUser()のテスト", t, func() {
 		Convey("ユーザが存在している場合、idが返却されること", func() {
 			u := &UserRepository{&testSqlHandler{}}
-			id, _ := u.CheckExistUser("email", "pass")
+			id, _ := u.CheckExistUser("email")
 			So(id, ShouldEqual, 1)
 		})
 	})
@@ -29,7 +29,7 @@ func (t *testSqlHandler) InsertUser(email string, password string) (err error) {
 
 	return nil
 }
-func (t *testSqlHandler) FetchUserID(email string, password string) (id int, err error) {
+func (t *testSqlHandler) FetchUserID(email string) (id int, err error) {
 	id = 1
 	err = nil
 	return

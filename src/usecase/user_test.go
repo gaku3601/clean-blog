@@ -35,6 +35,10 @@ func TestCertificationSocialProfile(t *testing.T) {
 			So(token, ShouldNotBeEmpty)
 		})
 		Convey("SocialProfile Tableにデータが登録されておらず、User Tableには存在している場合、登録を実施し、JWT tokenを返却する", func() {
+			r := new(testRepo)
+			u := &UserUsecase{r}
+			token, _ := u.CertificationSocialProfile(ServiseEnum(google), "ok@example.com", "nguid")
+			So(token, ShouldNotBeEmpty)
 		})
 		Convey("User TableにUserが存在しない場合、User Table・Social Table共にデータを格納し、JWT tokenを返却しない。", func() {
 		})
@@ -47,7 +51,11 @@ func (r *testRepo) Store(email string, password string) error {
 	return nil
 }
 
-func (r *testRepo) CheckExistUser(email string, password string) (int, error) {
+func (r *testRepo) CheckExistUser(email string) (int, error) {
+	return 1, nil
+}
+
+func (r *testRepo) CheckCertificationUser(email string, password string) (int, error) {
 	return 1, nil
 }
 
@@ -55,7 +63,7 @@ func (r *testRepo) UpdateValidEmail(email string) error {
 	return nil
 }
 
-func (r *testRepo) CreateSocialProfile(servise string, email string, uid string) error {
+func (r *testRepo) CreateSocialProfile(servise string, userID int, uid string) error {
 	return nil
 }
 func (r *testRepo) CheckExistSocialProfile(servise string, uid string) (userID int, err error) {
@@ -64,5 +72,5 @@ func (r *testRepo) CheckExistSocialProfile(servise string, uid string) (userID i
 		err = nil
 		return
 	}
-	return 0, errors.New("error!")
+	return 0, errors.New("No Data")
 }
