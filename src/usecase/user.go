@@ -9,8 +9,8 @@ type UserUsecase struct {
 	UserRepository
 }
 
-// Add ユーザを追加します。
-func (u *UserUsecase) Add(email string, password string) error {
+// AddUser ユーザを追加します。
+func (u *UserUsecase) AddUser(email string, password string) error {
 	d, err := domain.NewUser(email, password)
 	if err != nil {
 		return err
