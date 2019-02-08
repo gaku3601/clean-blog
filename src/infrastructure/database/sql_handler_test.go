@@ -34,9 +34,9 @@ func TestFetchDatabaseEnv(t *testing.T) {
 }
 
 func TestInsertUser(t *testing.T) {
-	db := setup()
-	defer tearDown()
 	Convey("Userが格納可能か検証", t, func() {
+		db := setup()
+		defer tearDown()
 		// 関数テスト
 		conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
 		s := &SQLHandler{conn}
@@ -46,6 +46,15 @@ func TestInsertUser(t *testing.T) {
 		var Password string
 		db.QueryRow("select email, password from users where id = 1").Scan(&Email, &Password)
 		So(Email, ShouldEqual, "ex@example.com")
+	})
+	Convey("idが返却されるか検証", t, func() {
+		setup()
+		defer tearDown()
+		// 関数テスト
+		conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
+		s := &SQLHandler{conn}
+		id, _ := s.InsertUser("ex@example.com", "p@ssword")
+		So(id, ShouldEqual, 1)
 	})
 }
 

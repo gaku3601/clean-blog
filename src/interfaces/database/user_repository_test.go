@@ -25,9 +25,9 @@ func TestStore(t *testing.T) {
 
 type testSqlHandler struct{}
 
-func (t *testSqlHandler) InsertUser(email string, password string) (err error) {
+func (t *testSqlHandler) InsertUser(email string, password string) (id int, err error) {
 
-	return nil
+	return 0, nil
 }
 func (t *testSqlHandler) FetchUserID(email string) (id int, err error) {
 	id = 1

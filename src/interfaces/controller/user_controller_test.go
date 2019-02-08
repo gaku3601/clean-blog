@@ -22,8 +22,8 @@ func TestSignIn(t *testing.T) {
 
 type testSqlHandler struct{}
 
-func (s *testSqlHandler) InsertUser(email string, password string) error {
-	return nil
+func (s *testSqlHandler) InsertUser(email string, password string) (id int, err error) {
+	return
 }
 
 func (s *testSqlHandler) FetchUserID(email string) (id int, err error) {

@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 
 	"github.com/gaku3601/clean-blog/src/interfaces/database"
@@ -37,10 +36,9 @@ func fetchDatabaseEnv() (d string) {
 }
 
 // InsertUser ユーザ内容を格納します。
-func (handler *SQLHandler) InsertUser(email string, password string) (err error) {
-	_, err = handler.Conn.Exec("Insert Into users (email, password) values ($1, $2);", email, password)
-	fmt.Println(err)
-	return nil
+func (handler *SQLHandler) InsertUser(email string, password string) (id int, err error) {
+	err = handler.Conn.QueryRow("Insert Into users (email, password) values ($1, $2) RETURNING id;", email, password).Scan(&id)
+	return
 }
 
 func (handler *SQLHandler) FetchUserID(email string) (id int, err error) {

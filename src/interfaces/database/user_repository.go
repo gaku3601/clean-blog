@@ -5,9 +5,7 @@ type UserRepository struct {
 }
 
 func (repo *UserRepository) StoreUser(email string, password string) (id int, err error) {
-	// TODO: ID返却処理を記述
-	id = 0
-	err = repo.InsertUser(email, password)
+	id, err = repo.InsertUser(email, password)
 	return
 }
 
