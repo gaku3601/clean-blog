@@ -25,6 +25,15 @@ func TestUpdateValidEmail(t *testing.T) {
 	})
 }
 
+func TestAddSocialProfile(t *testing.T) {
+	Convey("AddSocialProfile()で格納に成功した時、nilが返却されること", t, func() {
+		r := new(testRepo)
+		u := &UserUsecase{r}
+		err := u.AddSocialProfile(ServiseEnum(google), "ex@example.com", "10")
+		So(err, ShouldBeNil)
+	})
+}
+
 type testRepo struct{}
 
 func (r *testRepo) Store(email string, password string) error {
@@ -36,5 +45,9 @@ func (r *testRepo) CheckExistUser(email string, password string) (int, error) {
 }
 
 func (r *testRepo) UpdateValidEmail(email string) error {
+	return nil
+}
+
+func (r *testRepo) CreateSocialProfile(servise string, email string, uid string) error {
 	return nil
 }
