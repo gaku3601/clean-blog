@@ -50,7 +50,7 @@ const (
 	google ServiseEnum = "google"
 )
 
-func (u *UserUsecase) AddSocialProfile(servise ServiseEnum, email string, uid string) error {
+func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) error {
 	err := u.CreateSocialProfile(string(servise), email, uid)
 	return err
 }

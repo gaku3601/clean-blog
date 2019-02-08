@@ -29,7 +29,7 @@ func TestAddSocialProfile(t *testing.T) {
 	Convey("AddSocialProfile()で格納に成功した時、nilが返却されること", t, func() {
 		r := new(testRepo)
 		u := &UserUsecase{r}
-		err := u.AddSocialProfile(ServiseEnum(google), "ex@example.com", "10")
+		err := u.CertificationSocialProfile(ServiseEnum(google), "ex@example.com", "10")
 		So(err, ShouldBeNil)
 	})
 }
