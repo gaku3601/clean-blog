@@ -31,6 +31,7 @@ func TestAddSocialProfile(t *testing.T) {
 		u := &UserUsecase{r}
 		err := u.AddSocialProfile(ServiseEnum(google), "ex@example.com", "10")
 		So(err, ShouldBeNil)
+
 	})
 }
 
