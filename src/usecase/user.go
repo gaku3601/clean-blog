@@ -10,7 +10,7 @@ type UserUsecase struct {
 }
 
 // Add ユーザを追加します。
-func (u *UserUsecase) Add(email string, password string) error {
+func (u *UserUsecase) AddUser(email string, password string) error {
 	d, err := domain.NewUser(email)
 	if err != nil {
 		return err

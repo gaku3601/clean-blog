@@ -11,7 +11,7 @@ func TestAdd(t *testing.T) {
 	Convey("Add()で格納に成功した場合、nilが返却されること", t, func() {
 		r := new(testRepo)
 		u := &UserUsecase{r}
-		err := u.Add("email", "password")
+		err := u.AddUser("email", "password")
 
 		So(err, ShouldBeNil)
 	})

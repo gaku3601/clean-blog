@@ -21,7 +21,7 @@ func NewUserController(sqlHandler database.SQLHandler) *UserController {
 
 func (controller *UserController) Create(c Context) {
 	email, password := c.UserParams()
-	err := controller.Add(email, password)
+	err := controller.AddUser(email, password)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
