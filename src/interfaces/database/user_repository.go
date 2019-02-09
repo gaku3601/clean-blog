@@ -23,7 +23,7 @@ func (repo *UserRepository) CheckCertificationUser(email string, password string
 	return
 }
 
-func (repo *UserRepository) UpdateValidEmail(email string) (err error) {
+func (repo *UserRepository) UpdateValidEmail(id int) (err error) {
 	// TODO: あとで実装する
 	return nil
 }

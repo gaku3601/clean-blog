@@ -23,6 +23,7 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	return nil
 }
 
+// TODO: 関数名変更
 func (u *UserUsecase) FetchAuthToken(email string, password string) (string, error) {
 	id, err := u.CheckCertificationUser(email, password)
 	if err != nil {
@@ -36,8 +37,13 @@ func (u *UserUsecase) FetchAuthToken(email string, password string) (string, err
 	return token, nil
 }
 
-func (u *UserUsecase) ActivationEmail(email string) error {
-	err := u.UpdateValidEmail(email)
+func (u *UserUsecase) ActivationEmail(validToken string) error {
+	d := new(domain.User)
+	id, err := d.CheckValidEmailToken(validToken)
+	if err != nil {
+		return err
+	}
+	err = u.UpdateValidEmail(id)
 	return err
 }
 

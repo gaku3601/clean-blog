@@ -3,7 +3,9 @@ package usecase
 import (
 	"errors"
 	"testing"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -18,9 +20,19 @@ func Test(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 	})
-	Convey("UpdateValidEmail()", t, func() {
-		Convey("UpdateValidEmail()で更新処理に成功した時、nilが返却されること", func() {
-			err := u.ActivationEmail("ex@example.com")
+	Convey("ActivationEmail()", t, func() {
+		Convey("改ざんされたtokenが渡った場合、errorが返却されること", func() {
+			err := u.ActivationEmail("token")
+			So(err, ShouldNotBeNil)
+		})
+		Convey("ActivationEmail()で更新処理に成功した時、nilが返却されること", func() {
+			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+				"id":  12,
+				"exp": time.Now().Add(time.Hour * 24).Unix(),
+				"iat": time.Now(),
+			})
+			token, _ := t.SignedString([]byte("foobar2"))
+			err := u.ActivationEmail(token)
 			So(err, ShouldBeNil)
 		})
 	})
@@ -76,7 +88,7 @@ func (r *testRepo) CheckCertificationUser(email string, password string) (int, e
 	return 1, nil
 }
 
-func (r *testRepo) UpdateValidEmail(email string) error {
+func (r *testRepo) UpdateValidEmail(id int) error {
 	return nil
 }
 
