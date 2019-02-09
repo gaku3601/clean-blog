@@ -68,4 +68,22 @@ func Test(t *testing.T) {
 			So(id, ShouldEqual, 12)
 		})
 	})
+	Convey("CheckValidEmailToken()", t, func() {
+		u := &User{}
+		Convey("改ざんされたtokenの場合、errが返却されること", func() {
+			_, err := u.CheckValidEmailToken("token")
+			So(err, ShouldNotBeNil)
+		})
+		Convey("改ざんされていないtokenが渡された場合、idが返却されること", func() {
+			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+				"id":  13,
+				"exp": time.Now().Add(time.Hour * 24).Unix(),
+				"iat": time.Now(),
+			})
+			token, _ := t.SignedString([]byte("foobar2"))
+
+			id, _ := u.CheckValidEmailToken(token)
+			So(id, ShouldEqual, 13)
+		})
+	})
 }

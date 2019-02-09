@@ -54,6 +54,18 @@ func (u *User) CreateValidEmailToken(id int) (token string) {
 	return
 }
 
+func (u *User) CheckValidEmailToken(validToken string) (id int, err error) {
+	token, err := jwt.Parse(validToken, func(token *jwt.Token) (interface{}, error) {
+		return []byte("foobar2"), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	id = int(token.Claims.(jwt.MapClaims)["id"].(float64))
+
+	return
+}
+
 func (u *User) CreateHashPassword(password string) (hashPassword string) {
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hashPassword = string(hash)
