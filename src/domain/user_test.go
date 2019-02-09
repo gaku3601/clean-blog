@@ -50,6 +50,27 @@ func TestFetchJWT(t *testing.T) {
 	})
 }
 
+func TestCreateValidEmailToken(t *testing.T) {
+	Convey("FetchJWT()でtokenが返却されることを確認する", t, func() {
+		u := &User{}
+		t, _ := u.CreateValidEmailToken(1)
+
+		token, _ := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
+			return []byte("foobar2"), nil
+		})
+
+		Convey("idが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
+		})
+		Convey("expが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["exp"], ShouldNotBeNil)
+		})
+		Convey("iatが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
+		})
+	})
+}
+
 func TestCreateHashPassword(t *testing.T) {
 	Convey("hash化されているか検証する", t, func() {
 		u := &User{}

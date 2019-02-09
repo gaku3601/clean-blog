@@ -8,7 +8,7 @@ import (
 
 func TestSignIn(t *testing.T) {
 	Convey("SignIn()処理のテスト", t, func() {
-		c := NewUserController(&testSqlHandler{})
+		c := NewUserController(&testSqlHandler{}, &testMailHandler{})
 		con := new(testContext)
 		c.SignIn(con)
 		Convey("200が返却されること", func() {
@@ -21,6 +21,7 @@ func TestSignIn(t *testing.T) {
 }
 
 type testSqlHandler struct{}
+type testMailHandler struct{}
 
 func (s *testSqlHandler) InsertUser(email string, password string) (id int, err error) {
 	return

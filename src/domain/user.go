@@ -46,6 +46,20 @@ func (u *User) CreateJWT(id int) (string, error) {
 	return tokenstring, nil
 }
 
+func (u *User) CreateValidEmailToken(id int) (string, error) {
+	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+		"id":  id,
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"iat": time.Now(),
+	})
+	tokenstring, err := token.SignedString([]byte("foobar2"))
+
+	if err != nil {
+		return "", err
+	}
+	return tokenstring, nil
+}
+
 func (u *User) CreateHashPassword(password string) (hashPassword string) {
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	hashPassword = string(hash)

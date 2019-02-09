@@ -10,7 +10,8 @@ import (
 func TestAdd(t *testing.T) {
 	Convey("Add()で格納に成功した場合、nilが返却されること", t, func() {
 		r := new(testRepo)
-		u := &UserUsecase{r}
+		m := new(testMail)
+		u := &UserUsecase{r, m}
 		err := u.AddUser("email", "password")
 
 		So(err, ShouldBeNil)
@@ -20,7 +21,8 @@ func TestAdd(t *testing.T) {
 func TestUpdateValidEmail(t *testing.T) {
 	Convey("UpdateValidEmail()で更新処理に成功した時、nilが返却されること", t, func() {
 		r := new(testRepo)
-		u := &UserUsecase{r}
+		m := new(testMail)
+		u := &UserUsecase{r, m}
 		err := u.ActivationEmail("ex@example.com")
 		So(err, ShouldBeNil)
 	})
@@ -29,7 +31,8 @@ func TestUpdateValidEmail(t *testing.T) {
 func TestCertificationSocialProfile(t *testing.T) {
 	Convey("CertificationSocialProfileのテスト", t, func() {
 		r := new(testRepo)
-		u := &UserUsecase{r}
+		m := new(testMail)
+		u := &UserUsecase{r, m}
 		Convey("SocialProfile Tableに既にデータが登録されている場合、JWT tokenを返却する", func() {
 			token, _ := u.CertificationSocialProfile(ServiseEnum(google), "ok@example.com", "okuid")
 			So(token, ShouldNotBeEmpty)
@@ -46,6 +49,7 @@ func TestCertificationSocialProfile(t *testing.T) {
 }
 
 type testRepo struct{}
+type testMail struct{}
 
 func (r *testRepo) StoreUser(email string, password string) (id int, err error) {
 	return 0, nil
@@ -81,4 +85,8 @@ func (r *testRepo) CheckExistSocialProfile(servise string, uid string) (userID i
 		return
 	}
 	return 0, errors.New("No Data")
+}
+
+func (m *testMail) SendConfirmValidEmail(email string, token string) (err error) {
+	return
 }

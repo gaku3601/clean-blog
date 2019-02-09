@@ -7,6 +7,7 @@ import (
 // UserUsecase ユースケースstruct
 type UserUsecase struct {
 	UserRepository
+	UserMail
 }
 
 // Add ユーザを追加します。
