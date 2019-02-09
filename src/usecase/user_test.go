@@ -50,6 +50,9 @@ type testRepo struct{}
 func (r *testRepo) StoreUser(email string, password string) (id int, err error) {
 	return 0, nil
 }
+func (r *testRepo) StoreNonPasswordUser(email string) (id int, err error) {
+	return 0, nil
+}
 
 func (r *testRepo) CheckExistUser(email string) (userID int, err error) {
 	if email == "ok@example.com" {

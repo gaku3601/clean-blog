@@ -9,6 +9,10 @@ func (repo *UserRepository) StoreUser(email string, password string) (id int, er
 	return
 }
 
+func (repo *UserRepository) StoreNonPasswordUser(email string) (id int, err error) {
+	return
+}
+
 func (repo *UserRepository) CheckExistUser(email string) (id int, err error) {
 	id, err = repo.FetchUserID(email)
 	return

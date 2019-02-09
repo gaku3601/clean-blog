@@ -55,7 +55,7 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 	if err != nil && err.Error() == "No Data" {
 		userID, err := u.CheckExistUser(email)
 		if err != nil && err.Error() == "No Data" {
-			userID, err := u.StoreUser(email, "")
+			userID, err := u.StoreNonPasswordUser(email)
 			if err != nil {
 				return "", err
 			}

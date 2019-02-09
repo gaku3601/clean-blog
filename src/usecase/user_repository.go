@@ -3,6 +3,7 @@ package usecase
 // UserRepository interface
 type UserRepository interface {
 	StoreUser(email string, password string) (id int, err error)
+	StoreNonPasswordUser(email string) (id int, err error)
 	CheckExistUser(email string) (id int, err error)
 	CheckCertificationUser(email string, password string) (id int, err error)
 	UpdateValidEmail(email string) error
