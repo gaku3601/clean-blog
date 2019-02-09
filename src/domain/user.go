@@ -14,12 +14,11 @@ type User struct {
 	ValidEmail bool
 }
 
-func (u *User) CreateJWT(id int, email string) (token string) {
+func (u *User) CreateAccessToken(id int) (token string) {
 	t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-		"id":    id,
-		"email": email, // TODO: emailいる？
-		"exp":   time.Now().Add(time.Hour * 24).Unix(),
-		"iat":   time.Now(),
+		"id":  id,
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"iat": time.Now(),
 	})
 	token, err := t.SignedString([]byte("foobar"))
 
@@ -29,7 +28,7 @@ func (u *User) CreateJWT(id int, email string) (token string) {
 	return
 }
 
-func (u *User) CheckAuthToken(accessToken string) (id int, err error) {
+func (u *User) CheckAccessToken(accessToken string) (id int, err error) {
 	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte("foobar"), nil
 	})

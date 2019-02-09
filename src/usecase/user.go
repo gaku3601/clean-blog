@@ -29,7 +29,7 @@ func (u *UserUsecase) FetchAuthToken(email string, password string) (string, err
 		return "", err
 	}
 	d := new(domain.User)
-	token := d.CreateJWT(id, email)
+	token := d.CreateAccessToken(id)
 	if err != nil {
 		return "", err
 	}
@@ -71,6 +71,6 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 	} else if err != nil {
 		return "", err
 	}
-	token = d.CreateJWT(userID, email)
+	token = d.CreateAccessToken(userID)
 	return
 }

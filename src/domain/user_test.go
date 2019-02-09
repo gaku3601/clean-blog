@@ -9,17 +9,14 @@ import (
 )
 
 func Test(t *testing.T) {
-	Convey("FetchJWT()", t, func() {
-		u := &User{Email: "ex@example.com"}
-		t := u.CreateJWT(1, u.Email)
+	Convey("CreateAccessToken()", t, func() {
+		u := &User{}
+		t := u.CreateAccessToken(1)
 
 		token, _ := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
 			return []byte("foobar"), nil
 		})
 
-		Convey("emailが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["email"], ShouldEqual, "ex@example.com")
-		})
 		Convey("idが格納されていること", func() {
 			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
 		})
@@ -53,10 +50,10 @@ func Test(t *testing.T) {
 		hash := u.CreateHashPassword("pass")
 		So(len(hash), ShouldEqual, 60)
 	})
-	Convey("CheckAuthToken()", t, func() {
+	Convey("CheckAccessToken()", t, func() {
 		u := &User{}
 		Convey("改ざんされたtokenの場合、errが返却されること", func() {
-			_, err := u.CheckAuthToken("token")
+			_, err := u.CheckAccessToken("token")
 			So(err, ShouldNotBeNil)
 		})
 		Convey("改ざんされていないtokenが渡された場合、idが返却されること", func() {
@@ -67,7 +64,7 @@ func Test(t *testing.T) {
 			})
 			token, _ := t.SignedString([]byte("foobar"))
 
-			id, _ := u.CheckAuthToken(token)
+			id, _ := u.CheckAccessToken(token)
 			So(id, ShouldEqual, 12)
 		})
 	})
