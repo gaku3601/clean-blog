@@ -12,16 +12,13 @@ type UserUsecase struct {
 
 // Add ユーザを追加します。
 func (u *UserUsecase) AddUser(email string, password string) error {
-	d, err := domain.NewUser(email)
-	if err != nil {
-		return err
-	}
+	d := new(domain.User)
 	h := d.CreateHashPassword(password)
 	id, err := u.StoreUser(d.Email, h)
 	if err != nil {
 		return err
 	}
-	token, _ := d.CreateValidEmailToken(id)
+	token := d.CreateValidEmailToken(id)
 	u.SendConfirmValidEmail(email, token)
 	return nil
 }
@@ -31,11 +28,8 @@ func (u *UserUsecase) FetchAuthToken(email string, password string) (string, err
 	if err != nil {
 		return "", err
 	}
-	d, err := domain.NewUser(email)
-	if err != nil {
-		return "", err
-	}
-	token, err := d.CreateJWT(id)
+	d := new(domain.User)
+	token := d.CreateJWT(id, email)
 	if err != nil {
 		return "", err
 	}
@@ -54,10 +48,7 @@ const (
 )
 
 func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error) {
-	d, err := domain.NewUser(email)
-	if err != nil {
-		return "", err
-	}
+	d := new(domain.User)
 	userID, err := u.CheckExistSocialProfile(string(servise), uid)
 	if err != nil && err.Error() == "No Data" {
 		userID, err := u.CheckExistUser(email)
@@ -67,7 +58,7 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 				return "", err
 			}
 			u.StoreSocialProfile(string(servise), userID, uid)
-			token, _ := d.CreateValidEmailToken(userID)
+			token := d.CreateValidEmailToken(userID)
 			u.SendConfirmValidEmail(email, token)
 			return "", nil
 		} else if err != nil {
@@ -80,9 +71,6 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 	} else if err != nil {
 		return "", err
 	}
-	token, err = d.CreateJWT(userID)
-	if err != nil {
-		return "", err
-	}
-	return token, err
+	token = d.CreateJWT(userID, email)
+	return
 }

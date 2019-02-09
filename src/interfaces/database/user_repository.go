@@ -10,6 +10,7 @@ func (repo *UserRepository) StoreUser(email string, password string) (id int, er
 }
 
 func (repo *UserRepository) StoreNonPasswordUser(email string) (id int, err error) {
+	// TODO: あとで実装する
 	return
 }
 
