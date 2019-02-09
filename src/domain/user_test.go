@@ -2,6 +2,7 @@ package domain
 
 import (
 	"testing"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	. "github.com/smartystreets/goconvey/convey"
@@ -51,5 +52,23 @@ func Test(t *testing.T) {
 		u := &User{}
 		hash := u.CreateHashPassword("pass")
 		So(len(hash), ShouldEqual, 60)
+	})
+	Convey("CheckAuthToken()", t, func() {
+		u := &User{}
+		Convey("改ざんされたtokenの場合、errが返却されること", func() {
+			_, err := u.CheckAuthToken("token")
+			So(err, ShouldNotBeNil)
+		})
+		Convey("改ざんされていないtokenが渡された場合、idが返却されること", func() {
+			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+				"id":  12,
+				"exp": time.Now().Add(time.Hour * 24).Unix(),
+				"iat": time.Now(),
+			})
+			token, _ := t.SignedString([]byte("foobar"))
+
+			id, _ := u.CheckAuthToken(token)
+			So(id, ShouldEqual, 12)
+		})
 	})
 }

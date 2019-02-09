@@ -17,7 +17,7 @@ type User struct {
 func (u *User) CreateJWT(id int, email string) (token string) {
 	t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
 		"id":    id,
-		"email": email,
+		"email": email, // TODO: emailいる？
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 		"iat":   time.Now(),
 	})
@@ -26,6 +26,18 @@ func (u *User) CreateJWT(id int, email string) (token string) {
 	if err != nil {
 		panic(err)
 	}
+	return
+}
+
+func (u *User) CheckAuthToken(accessToken string) (id int, err error) {
+	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
+		return []byte("foobar"), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	id = int(token.Claims.(jwt.MapClaims)["id"].(float64))
+
 	return
 }
 
