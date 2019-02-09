@@ -46,6 +46,18 @@ func Test(t *testing.T) {
 			So(token, ShouldNotBeEmpty)
 		})
 	})
+	Convey("ConfirmValidAccessToken()", t, func() {
+		Convey("有効なtokenであれば、idが返却されるか", func() {
+			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+				"id":  8,
+				"exp": time.Now().Add(time.Hour * 24).Unix(),
+				"iat": time.Now(),
+			})
+			token, _ := t.SignedString([]byte("foobar"))
+			id, _ := u.ConfirmValidAccessToken(token)
+			So(id, ShouldEqual, 8)
+		})
+	})
 	Convey("CertificationSocialProfile()", t, func() {
 		Convey("SocialProfile Tableに既にデータが登録されている場合、JWT tokenを返却する", func() {
 			token, _ := u.CertificationSocialProfile(ServiseEnum(google), "ok@example.com", "okuid")

@@ -36,6 +36,12 @@ func (u *UserUsecase) GetAccessToken(email string, password string) (string, err
 	return token, nil
 }
 
+func (u *UserUsecase) ConfirmValidAccessToken(accessToken string) (id int, err error) {
+	d := new(domain.User)
+	id, err = d.CheckAccessToken(accessToken)
+	return
+}
+
 func (u *UserUsecase) ActivationEmail(validToken string) error {
 	d := new(domain.User)
 	id, err := d.CheckValidEmailToken(validToken)
