@@ -36,13 +36,13 @@ func Test(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 	})
-	Convey("FetchAuthToken()", t, func() {
+	Convey("GetAccessToken()", t, func() {
 		Convey("Userが存在していない場合、errを返却する", func() {
-			_, err := u.FetchAuthToken("ng@mail", "ngpass")
+			_, err := u.GetAccessToken("ng@mail", "ngpass")
 			So(err, ShouldNotBeNil)
 		})
 		Convey("Userが存在している場合、tokenが返却されること", func() {
-			token, _ := u.FetchAuthToken("ok@mail", "okpass")
+			token, _ := u.GetAccessToken("ok@mail", "okpass")
 			So(token, ShouldNotBeEmpty)
 		})
 	})

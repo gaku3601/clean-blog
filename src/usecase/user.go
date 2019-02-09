@@ -24,7 +24,7 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 }
 
 // TODO: 関数名変更
-func (u *UserUsecase) FetchAuthToken(email string, password string) (string, error) {
+func (u *UserUsecase) GetAccessToken(email string, password string) (string, error) {
 	id, err := u.CheckCertificationUser(email, password)
 	if err != nil {
 		return "", err
