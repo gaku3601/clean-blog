@@ -35,7 +35,7 @@ func (controller *UserController) Create(c Context) {
 
 func (controller *UserController) SignIn(c Context) {
 	email, password := c.UserParams()
-	token, err := controller.FetchJWT(email, password)
+	token, err := controller.FetchAuthToken(email, password)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return

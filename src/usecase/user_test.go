@@ -28,6 +28,25 @@ func TestUpdateValidEmail(t *testing.T) {
 	})
 }
 
+func TestFetchAuthToken(t *testing.T) {
+	Convey("FetchAuthTokenのテスト", t, func() {
+		Convey("Userが存在していない場合、errを返却する", func() {
+			r := new(testRepo)
+			m := new(testMail)
+			u := &UserUsecase{r, m}
+			_, err := u.FetchAuthToken("ng@mail", "ngpass")
+			So(err, ShouldNotBeNil)
+		})
+		Convey("Userが存在している場合、tokenが返却されること", func() {
+			r := new(testRepo)
+			m := new(testMail)
+			u := &UserUsecase{r, m}
+			token, _ := u.FetchAuthToken("ok@mail", "okpass")
+			So(token, ShouldNotBeEmpty)
+		})
+	})
+}
+
 func TestCertificationSocialProfile(t *testing.T) {
 	Convey("CertificationSocialProfileのテスト", t, func() {
 		r := new(testRepo)
@@ -68,6 +87,9 @@ func (r *testRepo) CheckExistUser(email string) (userID int, err error) {
 }
 
 func (r *testRepo) CheckCertificationUser(email string, password string) (int, error) {
+	if email == "ng@mail" {
+		return 0, errors.New("errorだよ！")
+	}
 	return 1, nil
 }
 

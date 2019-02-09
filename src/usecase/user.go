@@ -26,7 +26,7 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	return nil
 }
 
-func (u *UserUsecase) FetchJWT(email string, password string) (string, error) {
+func (u *UserUsecase) FetchAuthToken(email string, password string) (string, error) {
 	id, err := u.CheckCertificationUser(email, password)
 	if err != nil {
 		return "", err
