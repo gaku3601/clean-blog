@@ -7,51 +7,34 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestAdd(t *testing.T) {
-	Convey("Add()で格納に成功した場合、nilが返却されること", t, func() {
-		r := new(testRepo)
-		m := new(testMail)
-		u := &UserUsecase{r, m}
-		err := u.AddUser("email", "password")
+func Test(t *testing.T) {
+	r := new(testRepo)
+	m := new(testMail)
+	u := &UserUsecase{r, m}
+	Convey("AddUser()", t, func() {
+		Convey("AddUser()で格納に成功した場合、nilが返却されること", func() {
+			err := u.AddUser("email", "password")
 
-		So(err, ShouldBeNil)
+			So(err, ShouldBeNil)
+		})
 	})
-}
-
-func TestUpdateValidEmail(t *testing.T) {
-	Convey("UpdateValidEmail()で更新処理に成功した時、nilが返却されること", t, func() {
-		r := new(testRepo)
-		m := new(testMail)
-		u := &UserUsecase{r, m}
-		err := u.ActivationEmail("ex@example.com")
-		So(err, ShouldBeNil)
+	Convey("UpdateValidEmail()", t, func() {
+		Convey("UpdateValidEmail()で更新処理に成功した時、nilが返却されること", func() {
+			err := u.ActivationEmail("ex@example.com")
+			So(err, ShouldBeNil)
+		})
 	})
-}
-
-func TestFetchAuthToken(t *testing.T) {
-	Convey("FetchAuthTokenのテスト", t, func() {
+	Convey("FetchAuthToken()", t, func() {
 		Convey("Userが存在していない場合、errを返却する", func() {
-			r := new(testRepo)
-			m := new(testMail)
-			u := &UserUsecase{r, m}
 			_, err := u.FetchAuthToken("ng@mail", "ngpass")
 			So(err, ShouldNotBeNil)
 		})
 		Convey("Userが存在している場合、tokenが返却されること", func() {
-			r := new(testRepo)
-			m := new(testMail)
-			u := &UserUsecase{r, m}
 			token, _ := u.FetchAuthToken("ok@mail", "okpass")
 			So(token, ShouldNotBeEmpty)
 		})
 	})
-}
-
-func TestCertificationSocialProfile(t *testing.T) {
-	Convey("CertificationSocialProfileのテスト", t, func() {
-		r := new(testRepo)
-		m := new(testMail)
-		u := &UserUsecase{r, m}
+	Convey("CertificationSocialProfile()", t, func() {
 		Convey("SocialProfile Tableに既にデータが登録されている場合、JWT tokenを返却する", func() {
 			token, _ := u.CertificationSocialProfile(ServiseEnum(google), "ok@example.com", "okuid")
 			So(token, ShouldNotBeEmpty)
