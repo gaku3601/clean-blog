@@ -10,7 +10,7 @@ type UserUsecase struct {
 	UserMail
 }
 
-// Add ユーザを追加します。
+// AddUser ユーザを追加します。
 func (u *UserUsecase) AddUser(email string, password string) error {
 	d := new(domain.User)
 	h := d.CreateHashPassword(password)
@@ -23,6 +23,7 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	return nil
 }
 
+// GetAccessToken AccessTokenを返却します
 func (u *UserUsecase) GetAccessToken(email string, password string) (string, error) {
 	id, err := u.CheckCertificationUser(email, password)
 	if err != nil {
@@ -36,12 +37,14 @@ func (u *UserUsecase) GetAccessToken(email string, password string) (string, err
 	return token, nil
 }
 
+// ConfirmValidAccessToken AccessTokenの有効性をチェックし、UserIDを返却します。
 func (u *UserUsecase) ConfirmValidAccessToken(accessToken string) (id int, err error) {
 	d := new(domain.User)
 	id, err = d.CheckAccessToken(accessToken)
 	return
 }
 
+// ActivationEmail 登録時にメール宛に発行したtokenを検証し、Emailの有効性を確認します。
 func (u *UserUsecase) ActivationEmail(validToken string) error {
 	d := new(domain.User)
 	id, err := d.CheckValidEmailToken(validToken)
@@ -58,6 +61,7 @@ const (
 	google ServiseEnum = "google"
 )
 
+// CertificationSocialProfile OpenID認証を行います。
 func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error) {
 	d := new(domain.User)
 	userID, err := u.CheckExistSocialProfile(string(servise), uid)
