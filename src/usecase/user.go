@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/gaku3601/clean-blog/src/domain"
 )
 
@@ -23,12 +25,19 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	return nil
 }
 
-func (u *UserUsecase) ChangeUserPassword(id int) (string, error) {
+func (u *UserUsecase) ChangeUserPassword(id int, password string, nextPassword string) (err error) {
 	user, err := u.GetUser(id)
 	if err != nil {
-		return "", err
+		return err
 	}
-	return user.Password, nil
+	d := new(domain.User)
+	isMatch := d.CheckHashPassword(password, user.Password)
+	if !isMatch {
+		return errors.New("Passwords do not match")
+	}
+	hashPassword := d.CreateHashPassword(nextPassword)
+	err = u.UpdateUserPassword(id, hashPassword)
+	return err
 }
 
 // GetAccessToken AccessTokenを返却します

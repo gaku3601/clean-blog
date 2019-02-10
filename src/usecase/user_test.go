@@ -8,6 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gaku3601/clean-blog/src/domain"
 	. "github.com/smartystreets/goconvey/convey"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Test(t *testing.T) {
@@ -74,13 +75,17 @@ func Test(t *testing.T) {
 		})
 	})
 	Convey("ChangeUserPassword()", t, func() {
-		Convey("idで検索しユーザが存在している場合、hashpasswordを返却する", func() {
-			hash, _ := u.ChangeUserPassword(1)
-			So(hash, ShouldNotBeEmpty)
-		})
 		Convey("現在のpasswordが間違っている場合、errorが返却されること", func() {
+			err := u.ChangeUserPassword(1, "ngpassword", "nextPassword")
+			So(err, ShouldNotBeNil)
 		})
 		Convey("現在のpasswordがあっている場合、errorが返却されないこと", func() {
+			err := u.ChangeUserPassword(2, "okpassword", "nextPassword")
+			So(err, ShouldBeNil)
+		})
+		Convey("現在のpasswordがあっている場合、更新処理が行われること", func() {
+			err := u.ChangeUserPassword(2, "okpassword", "nextPassword")
+			So(err, ShouldBeNil)
 		})
 	})
 }
@@ -92,7 +97,15 @@ func (r *testRepo) StoreUser(email string, password string) (id int, err error) 
 	return 0, nil
 }
 func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
-	return &domain.User{Password: "ok"}, nil
+	if id == 1 {
+		return &domain.User{Password: "ng"}, nil
+	}
+	hash, _ := bcrypt.GenerateFromPassword([]byte("okpassword"), bcrypt.DefaultCost)
+	hashPassword := string(hash)
+	return &domain.User{Password: hashPassword}, nil
+}
+func (r *testRepo) UpdateUserPassword(id int, hashPassword string) (err error) {
+	return
 }
 func (r *testRepo) StoreNonPasswordUser(email string) (id int, err error) {
 	return 0, nil

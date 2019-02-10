@@ -6,8 +6,14 @@ type UserRepository struct {
 	SQLHandler
 }
 
+// TODO: passwordをhashPasswordへ引数名を変更する
 func (repo *UserRepository) StoreUser(email string, password string) (id int, err error) {
 	id, err = repo.InsertUser(email, password)
+	return
+}
+
+func (repo *UserRepository) UpdateUserPassword(id int, hashPassword string) (err error) {
+	//TODO: あとで実装する
 	return
 }
 

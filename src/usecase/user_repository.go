@@ -12,4 +12,5 @@ type UserRepository interface {
 	UpdateValidEmail(id int) error
 	StoreSocialProfile(servise string, userID int, uid string) error
 	CheckExistSocialProfile(servise string, uid string) (userID int, err error)
+	UpdateUserPassword(id int, hashPassword string) (err error)
 }
