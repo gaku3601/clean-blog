@@ -4,7 +4,7 @@ import "github.com/gaku3601/clean-blog/src/domain"
 
 // UserRepository interface
 type UserRepository interface {
-	StoreUser(email string, password string) (id int, err error)
+	StoreUser(email string, hashPassword string) (id int, err error)
 	GetUser(id int) (user *domain.User, err error)
 	StoreNonPasswordUser(email string) (id int, err error)
 	CheckExistUser(email string) (id int, err error)

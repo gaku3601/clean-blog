@@ -93,7 +93,7 @@ func Test(t *testing.T) {
 type testRepo struct{}
 type testMail struct{}
 
-func (r *testRepo) StoreUser(email string, password string) (id int, err error) {
+func (r *testRepo) StoreUser(email string, hashPassword string) (id int, err error) {
 	return 0, nil
 }
 func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
