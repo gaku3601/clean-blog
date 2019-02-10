@@ -28,6 +28,17 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	return nil
 }
 
+// ReSendConfirmValidEmail email有効化メールの再送を行います。
+func (u *UserUsecase) ReSendConfirmValidEmail(email string) (err error) {
+	id, err := u.CheckExistUser(email)
+	if err != nil {
+		return err
+	}
+	token := u.createValidEmailToken(id)
+	err = u.SendConfirmValidEmail(email, token)
+	return
+}
+
 // ChangeUserPassword passwordを変更します。
 func (u *UserUsecase) ChangeUserPassword(id int, password string, nextPassword string) (err error) {
 	user, err := u.GetUser(id)
@@ -62,7 +73,7 @@ func (u *UserUsecase) ConfirmValidAccessToken(accessToken string) (id int, err e
 	return
 }
 
-// ActivationEmail 登録時にメール宛に発行したtokenを検証し、Emailの有効性を確認します。
+// ActivationEmail 登録時にメール宛に発行したtokenを検証し、Emailの有効性を確認、更新します。
 func (u *UserUsecase) ActivationEmail(validToken string) error {
 	id, err := u.checkValidEmailToken(validToken)
 	if err != nil {

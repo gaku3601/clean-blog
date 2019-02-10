@@ -176,6 +176,16 @@ func Test(t *testing.T) {
 			So(isMatch, ShouldBeTrue)
 		})
 	})
+	Convey("ReSendConfirmValidEmail()", t, func() {
+		Convey("渡されたemailがUserとして登録されていない場合、errorを返却する", func() {
+			err := u.ReSendConfirmValidEmail("ex@example.com")
+			So(err, ShouldNotBeNil)
+		})
+		Convey("メールが送信された場合、errはnilとなること", func() {
+			err := u.ReSendConfirmValidEmail("ok@example.com")
+			So(err, ShouldBeNil)
+		})
+	})
 }
 
 type testRepo struct{}
