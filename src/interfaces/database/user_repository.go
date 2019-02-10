@@ -1,11 +1,18 @@
 package database
 
+import "github.com/gaku3601/clean-blog/src/domain"
+
 type UserRepository struct {
 	SQLHandler
 }
 
 func (repo *UserRepository) StoreUser(email string, password string) (id int, err error) {
 	id, err = repo.InsertUser(email, password)
+	return
+}
+
+func (repo *UserRepository) GetUser(id int) (user *domain.User, err error) {
+	// TODO: あとで実装する
 	return
 }
 

@@ -23,6 +23,14 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	return nil
 }
 
+func (u *UserUsecase) ChangeUserPassword(id int) (string, error) {
+	user, err := u.GetUser(id)
+	if err != nil {
+		return "", err
+	}
+	return user.Password, nil
+}
+
 // GetAccessToken AccessTokenを返却します
 func (u *UserUsecase) GetAccessToken(email string, password string) (string, error) {
 	id, err := u.CheckCertificationUser(email, password)

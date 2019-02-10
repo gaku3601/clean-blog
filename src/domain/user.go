@@ -71,3 +71,11 @@ func (u *User) CreateHashPassword(password string) (hashPassword string) {
 	hashPassword = string(hash)
 	return
 }
+
+func (u *User) CheckHashPassword(password string, hashPassword string) (isMatch bool) {
+	err := bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(password))
+	if err != nil {
+		return false
+	}
+	return true
+}

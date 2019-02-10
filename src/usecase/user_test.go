@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gaku3601/clean-blog/src/domain"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -72,6 +73,16 @@ func Test(t *testing.T) {
 			So(token, ShouldBeEmpty)
 		})
 	})
+	Convey("ChangeUserPassword()", t, func() {
+		Convey("idで検索しユーザが存在している場合、hashpasswordを返却する", func() {
+			hash, _ := u.ChangeUserPassword(1)
+			So(hash, ShouldNotBeEmpty)
+		})
+		Convey("現在のpasswordが間違っている場合、errorが返却されること", func() {
+		})
+		Convey("現在のpasswordがあっている場合、errorが返却されないこと", func() {
+		})
+	})
 }
 
 type testRepo struct{}
@@ -79,6 +90,9 @@ type testMail struct{}
 
 func (r *testRepo) StoreUser(email string, password string) (id int, err error) {
 	return 0, nil
+}
+func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
+	return &domain.User{Password: "ok"}, nil
 }
 func (r *testRepo) StoreNonPasswordUser(email string) (id int, err error) {
 	return 0, nil

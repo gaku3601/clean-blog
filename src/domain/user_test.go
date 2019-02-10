@@ -6,6 +6,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	. "github.com/smartystreets/goconvey/convey"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Test(t *testing.T) {
@@ -84,6 +85,23 @@ func Test(t *testing.T) {
 
 			id, _ := u.CheckValidEmailToken(token)
 			So(id, ShouldEqual, 13)
+		})
+	})
+	Convey("CheckHashPassword()", t, func() {
+		Convey("hash化されたpasswordと、通常passwordが一致していない場合、falseを返却する", func() {
+			hash, _ := bcrypt.GenerateFromPassword([]byte("ngpass"), bcrypt.DefaultCost)
+			hashPassword := string(hash)
+			u := new(User)
+			isMatch := u.CheckHashPassword("password", hashPassword)
+			So(isMatch, ShouldBeFalse)
+
+		})
+		Convey("hash化されたpasswordと、通常passwordが一致している場合、trueを返却する", func() {
+			hash, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.DefaultCost)
+			hashPassword := string(hash)
+			u := new(User)
+			isMatch := u.CheckHashPassword("password", hashPassword)
+			So(isMatch, ShouldBeTrue)
 		})
 	})
 }
