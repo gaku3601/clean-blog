@@ -25,6 +25,7 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	return nil
 }
 
+// ChangeUserPassword passwordを変更します。
 func (u *UserUsecase) ChangeUserPassword(id int, password string, nextPassword string) (err error) {
 	user, err := u.GetUser(id)
 	if err != nil {
