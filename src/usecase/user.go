@@ -89,6 +89,19 @@ const (
 	google ServiseEnum = "google"
 )
 
+func (u *UserUsecase) ActivationPassword(id int, password string) error {
+	user, err := u.GetUser(id)
+	if err != nil {
+		return err
+	}
+	if user.ValidPassword {
+		return errors.New("passwordが既に有効です。")
+	}
+	hashPassword := u.createHashPassword(password)
+	err = u.UpdateActivationPassword(id, hashPassword)
+	return err
+}
+
 // CertificationSocialProfile OpenID認証を行います。
 func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error) {
 	userID, err := u.CheckExistSocialProfile(string(servise), uid)

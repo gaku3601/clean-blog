@@ -186,6 +186,16 @@ func Test(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 	})
+	Convey("ActivationPassword()", t, func() {
+		Convey("userを取得しValidPasswordがtrueであればerrorを返却すること", func() {
+			err := u.ActivationPassword(3, "password")
+			So(err, ShouldNotBeNil)
+		})
+		Convey("passwordとValidPasswordの更新が行われること", func() {
+			err := u.ActivationPassword(4, "password")
+			So(err, ShouldBeNil)
+		})
+	})
 }
 
 type testRepo struct{}
@@ -198,11 +208,20 @@ func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
 	if id == 1 {
 		return &domain.User{Password: "ng"}, nil
 	}
+	if id == 3 {
+		return &domain.User{ValidPassword: true}, nil
+	}
+	if id == 4 {
+		return &domain.User{ValidPassword: false}, nil
+	}
 	hash, _ := bcrypt.GenerateFromPassword([]byte("okpassword"), bcrypt.DefaultCost)
 	hashPassword := string(hash)
 	return &domain.User{Password: hashPassword}, nil
 }
 func (r *testRepo) UpdateUserPassword(id int, hashPassword string) (err error) {
+	return
+}
+func (r *testRepo) UpdateActivationPassword(id int, hashPassword string) (err error) {
 	return
 }
 func (r *testRepo) StoreNonPasswordUser(email string) (id int, err error) {

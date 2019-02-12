@@ -11,6 +11,7 @@ func (repo *UserRepository) StoreUser(email string, hashPassword string) (id int
 	return
 }
 
+// UpdateUserPassword passwordを新しく設定します。
 func (repo *UserRepository) UpdateUserPassword(id int, hashPassword string) (err error) {
 	//TODO: あとで実装する
 	return
@@ -21,6 +22,7 @@ func (repo *UserRepository) GetUser(id int) (user *domain.User, err error) {
 	return
 }
 
+// StoreNonPasswordUser Passwordなしでユーザ登録を実施します。
 func (repo *UserRepository) StoreNonPasswordUser(email string) (id int, err error) {
 	// TODO: あとで実装する
 	return
@@ -38,6 +40,12 @@ func (repo *UserRepository) CheckCertificationUser(email string, password string
 func (repo *UserRepository) UpdateValidEmail(id int) (err error) {
 	// TODO: あとで実装する
 	return nil
+}
+
+// UpdateActivationPassword ValidPasswordをtrueへ変更し、新しくpasswordを設定します。
+func (repo *UserRepository) UpdateActivationPassword(id int, hashPassword string) (err error) {
+	// TODO: あとで実装する
+	return
 }
 
 func (repo *UserRepository) StoreSocialProfile(servise string, userID int, uid string) error {
