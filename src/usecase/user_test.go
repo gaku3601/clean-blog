@@ -196,6 +196,29 @@ func Test(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 	})
+	Convey("ForgotPassword()", t, func() {
+		Convey("emailからユーザが存在するか確認し、存在しない場合はerrorを返却する。", func() {
+			err := u.ForgotPassword("non@user.com")
+			So(err, ShouldNotBeNil)
+		})
+	})
+	Convey("createForgotPasswordToken()", t, func() {
+		t := u.createForgotPasswordToken(1)
+
+		token, _ := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
+			return []byte("foobar3"), nil
+		})
+
+		Convey("tokenにはidが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
+		})
+		Convey("tokenにはexpが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["exp"], ShouldNotBeNil)
+		})
+		Convey("tokenにはiatが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
+		})
+	})
 }
 
 type testRepo struct{}
@@ -261,5 +284,9 @@ func (r *testRepo) CheckExistSocialProfile(servise string, uid string) (userID i
 }
 
 func (m *testMail) SendConfirmValidEmail(email string, token string) (err error) {
+	return
+}
+
+func (m *testMail) SendForgotPasswordMail(email string, token string) (err error) {
 	return
 }

@@ -103,6 +103,17 @@ func (u *UserUsecase) ActivationPassword(id int, password string) error {
 	return err
 }
 
+// ForgotPassword passwordを忘れた際、email宛にpassword再設定URLを発行する。
+func (u *UserUsecase) ForgotPassword(email string) (err error) {
+	id, err := u.CheckExistUser(email)
+	if err != nil {
+		return err
+	}
+	token := u.createForgotPasswordToken(id)
+	err = u.SendForgotPasswordMail(email, token)
+	return
+}
+
 // CertificationSocialProfile OpenID認証を行います。
 func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error) {
 	userID, err := u.CheckExistSocialProfile(string(servise), uid)
@@ -184,6 +195,21 @@ func (u *UserUsecase) checkValidEmailToken(validToken string) (id int, err error
 	}
 	id = int(token.Claims.(jwt.MapClaims)["id"].(float64))
 
+	return
+}
+
+// createForgotPasswordToken passwordを忘れた際に発行するtokenを返却します。
+func (u *UserUsecase) createForgotPasswordToken(id int) (token string) {
+	t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+		"id":  id,
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"iat": time.Now(),
+	})
+	token, err := t.SignedString([]byte("foobar3"))
+
+	if err != nil {
+		panic(err)
+	}
 	return
 }
 
