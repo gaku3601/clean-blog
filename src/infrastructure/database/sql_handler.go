@@ -45,3 +45,9 @@ func (handler *SQLHandler) FetchUserID(email string) (id int, err error) {
 	// TODO: 実装する
 	return 0, nil
 }
+
+func (handler *SQLHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
+	// TODO: あとで実装する
+	_, err = handler.Conn.Exec("UPDATE users SET password = $2 WHERE id = $1;", id, hashPassword)
+	return
+}

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	_ "github.com/lib/pq"
@@ -55,6 +56,22 @@ func TestInsertUser(t *testing.T) {
 		s := &SQLHandler{conn}
 		id, _ := s.InsertUser("ex@example.com", "p@ssword")
 		So(id, ShouldEqual, 1)
+	})
+}
+func TestUpdateUserPassword(t *testing.T) {
+	Convey("Userを格納し、passwordが変更可能か検証", t, func() {
+		db := setup()
+		defer tearDown()
+		// Userの作成
+		conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
+		conn.Exec("Insert Into users (email, password) values ($1, $2) RETURNING id;", "mail", "oldpass")
+		// 関数テスト
+		s := &SQLHandler{conn}
+		s.UpdateUserPassword(1, "newpass")
+		// 検証
+		var Password string
+		db.QueryRow("select password from users where id = 1").Scan(&Password)
+		So(strings.TrimSpace(Password), ShouldEqual, "newpass")
 	})
 }
 

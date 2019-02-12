@@ -207,7 +207,7 @@ func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
 	hashPassword := string(hash)
 	return &domain.User{Password: hashPassword}, nil
 }
-func (r *testRepo) UpdateUserPassword(id int, hashPassword string) (err error) {
+func (r *testRepo) IUpdateUserPassword(id int, hashPassword string) (err error) {
 	return
 }
 func (r *testRepo) UpdateActivationPassword(id int, hashPassword string) (err error) {

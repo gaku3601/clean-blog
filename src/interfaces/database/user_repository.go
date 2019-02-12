@@ -12,8 +12,8 @@ func (repo *UserRepository) StoreUser(email string, hashPassword string) (id int
 }
 
 // UpdateUserPassword passwordを新しく設定します。
-func (repo *UserRepository) UpdateUserPassword(id int, hashPassword string) (err error) {
-	//TODO: あとで実装する
+func (repo *UserRepository) IUpdateUserPassword(id int, hashPassword string) (err error) {
+	err = repo.UpdateUserPassword(id, hashPassword)
 	return
 }
 

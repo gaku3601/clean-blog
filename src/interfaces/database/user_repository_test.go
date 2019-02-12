@@ -34,3 +34,7 @@ func (t *testSqlHandler) FetchUserID(email string) (id int, err error) {
 	err = nil
 	return
 }
+
+func (t *testSqlHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
+	return
+}

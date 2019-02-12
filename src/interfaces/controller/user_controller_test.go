@@ -32,6 +32,9 @@ func (s *testSqlHandler) FetchUserID(email string) (id int, err error) {
 	err = nil
 	return
 }
+func (s *testSqlHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
+	return
+}
 
 type testContext struct {
 	status  int

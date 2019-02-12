@@ -56,7 +56,7 @@ func (u *UserUsecase) ChangeUserPassword(id int, password string, nextPassword s
 		return errors.New("Passwords do not match")
 	}
 	hashPassword := u.createHashPassword(nextPassword)
-	err = u.UpdateUserPassword(id, hashPassword)
+	err = u.IUpdateUserPassword(id, hashPassword)
 	return err
 }
 
