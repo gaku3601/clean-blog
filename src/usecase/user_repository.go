@@ -4,14 +4,14 @@ import "github.com/gaku3601/clean-blog/src/domain"
 
 // UserRepository interface
 type UserRepository interface {
-	StoreUser(email string, hashPassword string) (id int, err error)
-	GetUser(id int) (user *domain.User, err error)
-	StoreNonPasswordUser(email string) (id int, err error)
-	CheckExistUser(email string) (id int, err error)
-	CheckCertificationUser(email string, password string) (id int, err error)
-	UpdateValidEmail(id int) error
-	StoreSocialProfile(servise string, userID int, uid string) error
-	CheckExistSocialProfile(servise string, uid string) (userID int, err error)
+	IStoreUser(email string, hashPassword string) (id int, err error)
+	IGetUser(id int) (user *domain.User, err error)
+	IStoreNonPasswordUser(email string) (id int, err error)
+	ICheckExistUser(email string) (id int, err error)
+	ICheckCertificationUser(email string, password string) (id int, err error)
+	IUpdateValidEmail(id int) error
+	IStoreSocialProfile(servise string, userID int, uid string) error
+	ICheckExistSocialProfile(servise string, uid string) (userID int, err error)
 	IUpdateUserPassword(id int, hashPassword string) (err error)
-	UpdateActivationPassword(id int, hashPassword string) (err error)
+	IUpdateActivationPassword(id int, hashPassword string) (err error)
 }

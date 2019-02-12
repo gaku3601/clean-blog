@@ -1,6 +1,6 @@
 package usecase
 
 type UserMail interface {
-	SendConfirmValidEmail(email string, token string) error
-	SendForgotPasswordMail(email string, token string) error
+	ISendConfirmValidEmail(email string, token string) error
+	ISendForgotPasswordMail(email string, token string) error
 }
