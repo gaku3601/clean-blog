@@ -33,7 +33,7 @@ func Test(t *testing.T) {
 				"exp": time.Now().Add(time.Hour * 24).Unix(),
 				"iat": time.Now(),
 			})
-			token, _ := t.SignedString([]byte("foobar2"))
+			token, _ := t.SignedString([]byte("emailkey"))
 			err := u.ActivationEmail(token)
 			So(err, ShouldBeNil)
 		})
@@ -55,7 +55,7 @@ func Test(t *testing.T) {
 				"exp": time.Now().Add(time.Hour * 24).Unix(),
 				"iat": time.Now(),
 			})
-			token, _ := t.SignedString([]byte("foobar"))
+			token, _ := t.SignedString([]byte("accesskey"))
 			id, _ := u.ConfirmValidAccessToken(token)
 			So(id, ShouldEqual, 8)
 		})
@@ -86,75 +86,6 @@ func Test(t *testing.T) {
 		Convey("現在のpasswordがあっている場合、更新処理が行われること", func() {
 			err := u.ChangeUserPassword(2, "okpassword", "nextPassword")
 			So(err, ShouldBeNil)
-		})
-	})
-	Convey("createAccessToken()", t, func() {
-		t := u.createAccessToken(1)
-
-		token, _ := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
-			return []byte("foobar"), nil
-		})
-
-		Convey("idが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
-		})
-		Convey("expが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["exp"], ShouldNotBeNil)
-		})
-		Convey("iatが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
-		})
-	})
-	Convey("checkAccessToken()", t, func() {
-		Convey("改ざんされたtokenの場合、errが返却されること", func() {
-			_, err := u.checkAccessToken("token")
-			So(err, ShouldNotBeNil)
-		})
-		Convey("改ざんされていないtokenが渡された場合、idが返却されること", func() {
-			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-				"id":  12,
-				"exp": time.Now().Add(time.Hour * 24).Unix(),
-				"iat": time.Now(),
-			})
-			token, _ := t.SignedString([]byte("foobar"))
-
-			id, _ := u.checkAccessToken(token)
-			So(id, ShouldEqual, 12)
-		})
-	})
-	Convey("CreateValidEmailToken()", t, func() {
-		t := u.createValidEmailToken(1)
-
-		token, _ := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
-			return []byte("foobar2"), nil
-		})
-
-		Convey("tokenにはidが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
-		})
-		Convey("tokenにはexpが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["exp"], ShouldNotBeNil)
-		})
-		Convey("tokenにはiatが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
-		})
-	})
-
-	Convey("CheckValidEmailToken()", t, func() {
-		Convey("改ざんされたtokenの場合、errが返却されること", func() {
-			_, err := u.checkValidEmailToken("token")
-			So(err, ShouldNotBeNil)
-		})
-		Convey("改ざんされていないtokenが渡された場合、idが返却されること", func() {
-			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-				"id":  13,
-				"exp": time.Now().Add(time.Hour * 24).Unix(),
-				"iat": time.Now(),
-			})
-			token, _ := t.SignedString([]byte("foobar2"))
-
-			id, _ := u.checkValidEmailToken(token)
-			So(id, ShouldEqual, 13)
 		})
 	})
 	Convey("createHashPassword()", t, func() {
@@ -202,23 +133,6 @@ func Test(t *testing.T) {
 			So(err, ShouldNotBeNil)
 		})
 	})
-	Convey("createForgotPasswordToken()", t, func() {
-		t := u.createForgotPasswordToken(1)
-
-		token, _ := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
-			return []byte("foobar3"), nil
-		})
-
-		Convey("tokenにはidが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
-		})
-		Convey("tokenにはexpが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["exp"], ShouldNotBeNil)
-		})
-		Convey("tokenにはiatが格納されていること", func() {
-			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
-		})
-	})
 	Convey("ProcessForgotPassword()", t, func() {
 		Convey("tokenが改ざんされている場合、errorが返却されること", func() {
 			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
@@ -231,9 +145,32 @@ func Test(t *testing.T) {
 			So(err, ShouldNotBeNil)
 		})
 	})
+	Convey("createToken()", t, func() {
+		t, _ := u.createToken(1, "tokenpass")
+
+		token, _ := jwt.Parse(t, func(token *jwt.Token) (interface{}, error) {
+			return []byte("tokenpass"), nil
+		})
+
+		Convey("tokenにはidが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["id"], ShouldEqual, 1)
+		})
+		Convey("tokenにはexpが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["exp"], ShouldNotBeNil)
+		})
+		Convey("tokenにはiatが格納されていること", func() {
+			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
+		})
+	})
 	Convey("checkForgotPasswordToken()", t, func() {
 		Convey("改ざんされたtokenの場合、errが返却されること", func() {
-			_, err := u.checkForgotPasswordToken("token")
+			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+				"id":  14,
+				"exp": time.Now().Add(time.Hour * 24).Unix(),
+				"iat": time.Now(),
+			})
+			token, _ := t.SignedString([]byte("badsignkey"))
+			_, err := u.checkToken(token, "truesignkey")
 			So(err, ShouldNotBeNil)
 		})
 		Convey("改ざんされていないtokenが渡された場合、idが返却されること", func() {
@@ -242,9 +179,9 @@ func Test(t *testing.T) {
 				"exp": time.Now().Add(time.Hour * 24).Unix(),
 				"iat": time.Now(),
 			})
-			token, _ := t.SignedString([]byte("foobar3"))
+			token, _ := t.SignedString([]byte("signkey"))
 
-			id, _ := u.checkForgotPasswordToken(token)
+			id, _ := u.checkToken(token, "signkey")
 			So(id, ShouldEqual, 14)
 		})
 	})

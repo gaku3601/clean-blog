@@ -23,7 +23,10 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	if err != nil {
 		return err
 	}
-	token := u.createValidEmailToken(id)
+	token, err := u.createToken(id, "emailkey")
+	if err != nil {
+		return err
+	}
 	u.SendConfirmValidEmail(email, token)
 	return nil
 }
@@ -34,7 +37,10 @@ func (u *UserUsecase) ReSendConfirmValidEmail(email string) (err error) {
 	if err != nil {
 		return err
 	}
-	token := u.createValidEmailToken(id)
+	token, err := u.createToken(id, "emailkey")
+	if err != nil {
+		return err
+	}
 	err = u.SendConfirmValidEmail(email, token)
 	return
 }
@@ -60,7 +66,7 @@ func (u *UserUsecase) GetAccessToken(email string, password string) (string, err
 	if err != nil {
 		return "", err
 	}
-	token := u.createAccessToken(id)
+	token, err := u.createToken(id, "accesskey")
 	if err != nil {
 		return "", err
 	}
@@ -69,13 +75,13 @@ func (u *UserUsecase) GetAccessToken(email string, password string) (string, err
 
 // ConfirmValidAccessToken AccessTokenの有効性をチェックし、UserIDを返却します。
 func (u *UserUsecase) ConfirmValidAccessToken(accessToken string) (id int, err error) {
-	id, err = u.checkAccessToken(accessToken)
+	id, err = u.checkToken(accessToken, "accesskey")
 	return
 }
 
 // ActivationEmail 登録時にメール宛に発行したtokenを検証し、Emailの有効性を確認、更新します。
 func (u *UserUsecase) ActivationEmail(validToken string) error {
-	id, err := u.checkValidEmailToken(validToken)
+	id, err := u.checkToken(validToken, "emailkey")
 	if err != nil {
 		return err
 	}
@@ -109,14 +115,17 @@ func (u *UserUsecase) ForgotPassword(email string) (err error) {
 	if err != nil {
 		return err
 	}
-	token := u.createForgotPasswordToken(id)
+	token, err := u.createToken(id, "forgotkey")
+	if err != nil {
+		return err
+	}
 	err = u.SendForgotPasswordMail(email, token)
 	return
 }
 
 // ProcessForgotPassword パスワードを忘れた際に発行したURLから、新しいパスワードを設定します。
 func (u *UserUsecase) ProcessForgotPassword(token string, newPassword string) (err error) {
-	id, err := u.checkForgotPasswordToken(token)
+	id, err := u.checkToken(token, "forgotkey")
 	if err != nil {
 		return err
 	}
@@ -136,7 +145,10 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 				return "", err
 			}
 			u.StoreSocialProfile(string(servise), userID, uid)
-			token := u.createValidEmailToken(userID)
+			token, err := u.createToken(userID, "emailkey")
+			if err != nil {
+				return "", err
+			}
 			u.SendConfirmValidEmail(email, token)
 			return "", nil
 		} else if err != nil {
@@ -149,91 +161,7 @@ func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email stri
 	} else if err != nil {
 		return "", err
 	}
-	token = u.createAccessToken(userID)
-	return
-}
-
-// createAccessToken アクセストークンを作成します。
-func (u *UserUsecase) createAccessToken(id int) (token string) {
-	t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-		"id":  id,
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
-		"iat": time.Now(),
-	})
-	token, err := t.SignedString([]byte("foobar"))
-
-	if err != nil {
-		panic(err)
-	}
-	return
-}
-
-// checkAccessToken アクセストークンを検証し、useridを返却します。
-func (u *UserUsecase) checkAccessToken(accessToken string) (id int, err error) {
-	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
-		return []byte("foobar"), nil
-	})
-	if err != nil {
-		return 0, err
-	}
-	id = int(token.Claims.(jwt.MapClaims)["id"].(float64))
-
-	return
-}
-
-// createValidEmailToken Email有効化tokenを発行します。
-func (u *UserUsecase) createValidEmailToken(id int) (token string) {
-	t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-		"id":  id,
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
-		"iat": time.Now(),
-	})
-	token, err := t.SignedString([]byte("foobar2"))
-
-	if err != nil {
-		panic(err)
-	}
-	return
-}
-
-// checkValidEmailToken Email有効化tokenを検証し、useridを返却します。
-func (u *UserUsecase) checkValidEmailToken(validToken string) (id int, err error) {
-	token, err := jwt.Parse(validToken, func(token *jwt.Token) (interface{}, error) {
-		return []byte("foobar2"), nil
-	})
-	if err != nil {
-		return 0, err
-	}
-	id = int(token.Claims.(jwt.MapClaims)["id"].(float64))
-
-	return
-}
-
-// createForgotPasswordToken passwordを忘れた際に発行するtokenを返却します。
-func (u *UserUsecase) createForgotPasswordToken(id int) (token string) {
-	t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
-		"id":  id,
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
-		"iat": time.Now(),
-	})
-	token, err := t.SignedString([]byte("foobar3"))
-
-	if err != nil {
-		panic(err)
-	}
-	return
-}
-
-// checkForgotPasswordToken ForgotPasswordTokenを検証し、idを返却します。
-func (u *UserUsecase) checkForgotPasswordToken(validToken string) (id int, err error) {
-	token, err := jwt.Parse(validToken, func(token *jwt.Token) (interface{}, error) {
-		return []byte("foobar3"), nil
-	})
-	if err != nil {
-		return 0, err
-	}
-	id = int(token.Claims.(jwt.MapClaims)["id"].(float64))
-
+	token, err = u.createToken(userID, "accesskey")
 	return
 }
 
@@ -251,4 +179,32 @@ func (u *UserUsecase) checkHashPassword(password string, hashPassword string) (i
 		return false
 	}
 	return true
+}
+
+// createToken tokenを作成します。
+func (u *UserUsecase) createToken(id int, signKey string) (token string, err error) {
+	t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+		"id":  id,
+		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"iat": time.Now(),
+	})
+	token, err = t.SignedString([]byte(signKey))
+
+	if err != nil {
+		return "", err
+	}
+	return
+}
+
+// checkToken tokenを検証しuserIDを返却します。
+func (u *UserUsecase) checkToken(token string, signKey string) (id int, err error) {
+	t, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		return []byte(signKey), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	id = int(t.Claims.(jwt.MapClaims)["id"].(float64))
+
+	return
 }
