@@ -219,6 +219,35 @@ func Test(t *testing.T) {
 			So(token.Claims.(jwt.MapClaims)["iat"], ShouldNotBeNil)
 		})
 	})
+	Convey("ProcessForgotPassword()", t, func() {
+		Convey("tokenが改ざんされている場合、errorが返却されること", func() {
+			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+				"id":  14,
+				"exp": time.Now().Add(time.Hour * 24).Unix(),
+				"iat": time.Now(),
+			})
+			token, _ := t.SignedString([]byte("badtoken"))
+			err := u.ProcessForgotPassword(token, "newPassword")
+			So(err, ShouldNotBeNil)
+		})
+	})
+	Convey("checkForgotPasswordToken()", t, func() {
+		Convey("改ざんされたtokenの場合、errが返却されること", func() {
+			_, err := u.checkForgotPasswordToken("token")
+			So(err, ShouldNotBeNil)
+		})
+		Convey("改ざんされていないtokenが渡された場合、idが返却されること", func() {
+			t := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), jwt.MapClaims{
+				"id":  14,
+				"exp": time.Now().Add(time.Hour * 24).Unix(),
+				"iat": time.Now(),
+			})
+			token, _ := t.SignedString([]byte("foobar3"))
+
+			id, _ := u.checkForgotPasswordToken(token)
+			So(id, ShouldEqual, 14)
+		})
+	})
 }
 
 type testRepo struct{}

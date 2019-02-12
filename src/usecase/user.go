@@ -114,6 +114,17 @@ func (u *UserUsecase) ForgotPassword(email string) (err error) {
 	return
 }
 
+// ProcessForgotPassword パスワードを忘れた際に発行したURLから、新しいパスワードを設定します。
+func (u *UserUsecase) ProcessForgotPassword(token string, newPassword string) (err error) {
+	id, err := u.checkForgotPasswordToken(token)
+	if err != nil {
+		return err
+	}
+	hashPassword := u.createHashPassword(newPassword)
+	err = u.UpdateActivationPassword(id, hashPassword)
+	return
+}
+
 // CertificationSocialProfile OpenID認証を行います。
 func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error) {
 	userID, err := u.CheckExistSocialProfile(string(servise), uid)
@@ -210,6 +221,19 @@ func (u *UserUsecase) createForgotPasswordToken(id int) (token string) {
 	if err != nil {
 		panic(err)
 	}
+	return
+}
+
+// checkForgotPasswordToken ForgotPasswordTokenを検証し、idを返却します。
+func (u *UserUsecase) checkForgotPasswordToken(validToken string) (id int, err error) {
+	token, err := jwt.Parse(validToken, func(token *jwt.Token) (interface{}, error) {
+		return []byte("foobar3"), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	id = int(token.Claims.(jwt.MapClaims)["id"].(float64))
+
 	return
 }
 
