@@ -89,6 +89,7 @@ const (
 	google ServiseEnum = "google"
 )
 
+// ActivationPassword Password認証を有効化します。
 func (u *UserUsecase) ActivationPassword(id int, password string) error {
 	user, err := u.GetUser(id)
 	if err != nil {
