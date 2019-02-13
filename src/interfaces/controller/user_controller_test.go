@@ -3,6 +3,7 @@ package controller
 import (
 	"testing"
 
+	"github.com/gaku3601/clean-blog/src/domain"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -23,16 +24,34 @@ func TestSignIn(t *testing.T) {
 type testSqlHandler struct{}
 type testMailHandler struct{}
 
-func (s *testSqlHandler) InsertUser(email string, password string) (id int, err error) {
+func (s *testSqlHandler) IStoreUser(email string, hashPassword string) (id int, err error) {
 	return
 }
-
-func (s *testSqlHandler) FetchUserID(email string) (id int, err error) {
-	id = 1
-	err = nil
+func (s *testSqlHandler) IGetUser(id int) (user *domain.User, err error) {
 	return
 }
-func (s *testSqlHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
+func (s *testSqlHandler) IStoreNonPasswordUser(email string) (id int, err error) {
+	return
+}
+func (s *testSqlHandler) ICheckExistUser(email string) (id int, err error) {
+	return
+}
+func (s *testSqlHandler) ICheckCertificationUser(email string, password string) (id int, err error) {
+	return
+}
+func (s *testSqlHandler) IUpdateValidEmail(id int) (err error) {
+	return
+}
+func (s *testSqlHandler) IStoreSocialProfile(servise string, userID int, uid string) (err error) {
+	return
+}
+func (s *testSqlHandler) ICheckExistSocialProfile(servise string, uid string) (userID int, err error) {
+	return
+}
+func (s *testSqlHandler) IUpdateUserPassword(id int, hashPassword string) (err error) {
+	return
+}
+func (s *testSqlHandler) IUpdateActivationPassword(id int, hashPassword string) (err error) {
 	return
 }
 
