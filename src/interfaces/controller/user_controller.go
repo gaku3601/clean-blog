@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/gaku3601/clean-blog/src/interfaces/mail"
 	"github.com/gaku3601/clean-blog/src/usecase"
 )
 
@@ -9,13 +8,11 @@ type UserController struct {
 	*usecase.UserUsecase
 }
 
-func NewUserController(sqlHandler usecase.UserRepository, mailHandler mail.MailHandler) *UserController {
+func NewUserController(sqlHandler usecase.UserRepository, mailHandler usecase.UserMail) *UserController {
 	return &UserController{
 		&usecase.UserUsecase{
 			sqlHandler,
-			&mail.UserMail{
-				mailHandler,
-			},
+			mailHandler,
 		},
 	}
 }

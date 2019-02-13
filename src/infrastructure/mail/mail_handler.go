@@ -1,10 +1,17 @@
 package mail
 
-import "github.com/gaku3601/clean-blog/src/interfaces/mail"
+import "github.com/gaku3601/clean-blog/src/usecase"
 
 type MailHandler struct {
 }
 
-func NewMailHandler() mail.MailHandler {
+func NewMailHandler() usecase.UserMail {
 	return new(MailHandler)
+}
+
+func (m *MailHandler) ISendConfirmValidEmail(email string, token string) (err error) {
+	return
+}
+func (m *MailHandler) ISendForgotPasswordMail(email string, token string) (err error) {
+	return
 }

@@ -54,6 +54,12 @@ func (s *testSqlHandler) IUpdateUserPassword(id int, hashPassword string) (err e
 func (s *testSqlHandler) IUpdateActivationPassword(id int, hashPassword string) (err error) {
 	return
 }
+func (m *testMailHandler) ISendConfirmValidEmail(email string, token string) (err error) {
+	return
+}
+func (m *testMailHandler) ISendForgotPasswordMail(email string, token string) (err error) {
+	return
+}
 
 type testContext struct {
 	status  int
