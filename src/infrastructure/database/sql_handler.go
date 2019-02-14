@@ -115,6 +115,9 @@ func (s *SQLHandler) UpdateUserPassword(id int, hashPassword string) (err error)
 	_, err = s.Conn.Exec("Update users Set password = $2 Where id = $1", id, hashPassword)
 	return
 }
+
+// UpdateActivationPassword passwordを変更し、かつValidPasswordをtrueに設定します。
 func (s *SQLHandler) UpdateActivationPassword(id int, hashPassword string) (err error) {
+	_, err = s.Conn.Exec("Update users Set password = $2, valid_password = $3 Where id = $1", id, hashPassword, true)
 	return
 }

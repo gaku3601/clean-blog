@@ -166,6 +166,21 @@ func Test(t *testing.T) {
 			So(strings.TrimSpace(password), ShouldEqual, "changePass")
 		})
 	})
+	Convey("UpdateActivationPassword()", t, func() {
+		db := setup()
+		defer tearDown()
+		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
+		s.UpdateActivationPassword(1, "changePass")
+		var password string
+		var validPassword bool
+		db.QueryRow("select password,valid_password from users where id = 1;").Scan(&password, &validPassword)
+		Convey("passwordが変更されているか", func() {
+			So(strings.TrimSpace(password), ShouldEqual, "changePass")
+		})
+		Convey("valid_passwordがtrueになっているか", func() {
+			So(validPassword, ShouldBeTrue)
+		})
+	})
 }
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {
