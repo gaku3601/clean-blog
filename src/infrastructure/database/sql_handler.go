@@ -5,9 +5,10 @@ import (
 	"errors"
 	"os"
 
-	// PostgreSQL driver
 	"github.com/gaku3601/clean-blog/src/domain"
 	"github.com/gaku3601/clean-blog/src/usecase"
+
+	// PostgreSQL driver
 	_ "github.com/lib/pq"
 )
 
