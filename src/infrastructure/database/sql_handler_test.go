@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"os"
 	"os/exec"
+	"strings"
 	"testing"
 
 	_ "github.com/lib/pq"
@@ -12,11 +13,11 @@ import (
 )
 
 func Test(t *testing.T) {
+	conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
+	s := &SQLHandler{conn}
 	Convey("StoreUser()", t, func() {
 		db := setup()
 		defer tearDown()
-		conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
-		s := &SQLHandler{conn}
 		id, _ := s.StoreUser("ex@example.com", "p@ssword")
 		Convey("正常に格納されるか", func() {
 			// 検証
@@ -27,6 +28,27 @@ func Test(t *testing.T) {
 		})
 		Convey("idが返却されているか", func() {
 			So(id, ShouldEqual, 1)
+		})
+	})
+	Convey("GetUser()", t, func() {
+		db := setup()
+		defer tearDown()
+		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
+		user, _ := s.GetUser(1)
+		Convey("IDが格納されているか", func() {
+			So(user.ID, ShouldEqual, 1)
+		})
+		Convey("Emailが格納されているか", func() {
+			So(user.Email, ShouldEqual, "ex@mail")
+		})
+		Convey("Passwordが格納されているか", func() {
+			So(strings.TrimSpace(user.Password), ShouldEqual, "testpass")
+		})
+		Convey("ValidEmailが格納されているか", func() {
+			So(user.ValidEmail, ShouldBeFalse)
+		})
+		Convey("ValidPasswordが格納されているか", func() {
+			So(user.ValidPassword, ShouldBeFalse)
 		})
 	})
 }

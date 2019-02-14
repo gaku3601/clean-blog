@@ -41,6 +41,8 @@ func (s *SQLHandler) StoreUser(email string, hashPassword string) (id int, err e
 	return
 }
 func (s *SQLHandler) GetUser(id int) (user *domain.User, err error) {
+	user = new(domain.User)
+	err = s.Conn.QueryRow("select id, email, password, valid_email, valid_password from users where id = $1;", id).Scan(&user.ID, &user.Email, &user.Password, &user.ValidEmail, &user.ValidPassword)
 	return
 }
 func (s *SQLHandler) StoreNonPasswordUser(email string) (id int, err error) {
