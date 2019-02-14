@@ -155,6 +155,17 @@ func Test(t *testing.T) {
 			So(err, ShouldEqual, domain.NoData)
 		})
 	})
+	Convey("UpdateUserPassword()", t, func() {
+		db := setup()
+		defer tearDown()
+		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
+		s.UpdateUserPassword(1, "changePass")
+		var password string
+		db.QueryRow("select password from users where id = 1;").Scan(&password)
+		Convey("passwordが変更されているか", func() {
+			So(strings.TrimSpace(password), ShouldEqual, "changePass")
+		})
+	})
 }
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {

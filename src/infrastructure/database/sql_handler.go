@@ -109,7 +109,10 @@ func (s *SQLHandler) CheckExistSocialProfile(service string, uid string) (userID
 	}
 	return
 }
+
+// UpdateUserPassword Userのpasswordを変更します。
 func (s *SQLHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
+	_, err = s.Conn.Exec("Update users Set password = $2 Where id = $1", id, hashPassword)
 	return
 }
 func (s *SQLHandler) UpdateActivationPassword(id int, hashPassword string) (err error) {
