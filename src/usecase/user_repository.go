@@ -9,7 +9,7 @@ type UserRepository interface {
 	GetUserByEmail(email string) (user *domain.User, err error)
 	StoreNonPasswordUserAndSocialProfile(email string, service string, uid string) (id int, err error)
 	UpdateValidEmail(id int) error
-	StoreSocialProfile(service string, userID int, uid string) error
+	StoreSocialProfile(service string, uid string, userID int) error
 	CheckExistSocialProfile(service string, uid string) (userID int, err error)
 	UpdateUserPassword(id int, hashPassword string) (err error)
 	UpdateActivationPassword(id int, hashPassword string) (err error)

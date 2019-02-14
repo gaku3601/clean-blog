@@ -157,7 +157,7 @@ func (u *UserUsecase) CertificationSocialProfile(service ServiceEnum, email stri
 		user, err := u.GetUserByEmail(email)
 		if err == nil {
 			// SocialProfileに登録を実施する。
-			err = u.StoreSocialProfile(string(service), user.ID, uid)
+			err = u.StoreSocialProfile(string(service), uid, user.ID)
 			if err != nil {
 				return "", err
 			}

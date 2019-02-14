@@ -88,7 +88,10 @@ func (s *SQLHandler) UpdateValidEmail(id int) (err error) {
 	_, err = s.Conn.Exec("Update users Set valid_email = $2 Where id = $1;", id, true)
 	return
 }
-func (s *SQLHandler) StoreSocialProfile(servise string, userID int, uid string) (err error) {
+
+// StoreSocialProfile SocialProfileテーブルにデータを格納する。
+func (s *SQLHandler) StoreSocialProfile(service string, uid string, userID int) (err error) {
+	_, err = s.Conn.Exec("Insert Into social_profiles (service, uid, user_id) values ($1, $2, $3);", service, uid, userID)
 	return
 }
 func (s *SQLHandler) CheckExistSocialProfile(servise string, uid string) (userID int, err error) {

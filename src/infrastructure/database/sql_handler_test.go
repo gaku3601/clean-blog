@@ -112,6 +112,26 @@ func Test(t *testing.T) {
 			So(validEmail, ShouldBeTrue)
 		})
 	})
+	Convey("StoreSocialProfile()", t, func() {
+		db := setup()
+		defer tearDown()
+		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
+		s.StoreSocialProfile("google", "okuid", 1)
+		// 検証
+		var service string
+		var uid string
+		var userID int
+		db.QueryRow("select service,uid,user_id from social_profiles where id = 1").Scan(&service, &uid, &userID)
+		Convey("serviseは格納されているか", func() {
+			So(service, ShouldEqual, "google")
+		})
+		Convey("uidは格納されているか", func() {
+			So(uid, ShouldEqual, "okuid")
+		})
+		Convey("user_idは格納されているか", func() {
+			So(userID, ShouldEqual, 1)
+		})
+	})
 }
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {
