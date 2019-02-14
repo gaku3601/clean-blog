@@ -141,6 +141,20 @@ func Test(t *testing.T) {
 			So(userID, ShouldEqual, 1)
 		})
 	})
+	Convey("CheckExistSocialProfile()", t, func() {
+		db := setup()
+		defer tearDown()
+		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
+		db.Exec("insert into social_profiles (service, uid, user_id) values ($1,$2,$3)", "google", "okuid", 1)
+		userID, _ := s.CheckExistSocialProfile("google", "okuid")
+		Convey("userIDが返却されているか", func() {
+			So(userID, ShouldEqual, 1)
+		})
+		_, err := s.CheckExistSocialProfile("badgoogle", "okuid")
+		Convey("データが存在しない場合、NoDataErrorが返却されるか", func() {
+			So(err, ShouldEqual, domain.NoData)
+		})
+	})
 }
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {
