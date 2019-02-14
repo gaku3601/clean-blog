@@ -80,6 +80,10 @@ func Test(t *testing.T) {
 		Convey("ValidPasswordが格納されているか", func() {
 			So(user.ValidPassword, ShouldBeFalse)
 		})
+		_, err := s.GetUserByEmail("no@mail")
+		Convey("dataが存在しない場合、NoData Errorが返却されるか", func() {
+			So(err, ShouldEqual, domain.NoData)
+		})
 	})
 	Convey("StoreNonPasswordUserAndSocialProfile()", t, func() {
 		db := setup()

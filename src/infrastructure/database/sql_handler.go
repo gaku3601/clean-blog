@@ -57,6 +57,9 @@ func (s *SQLHandler) GetUserByID(id int) (user *domain.User, err error) {
 func (s *SQLHandler) GetUserByEmail(email string) (user *domain.User, err error) {
 	user = new(domain.User)
 	err = s.Conn.QueryRow("select id, email, password, valid_email, valid_password from users where email = $1;", email).Scan(&user.ID, &user.Email, &user.Password, &user.ValidEmail, &user.ValidPassword)
+	if err != nil && err.Error() == "sql: no rows in result set" {
+		return nil, domain.NoData
+	}
 	return
 }
 
