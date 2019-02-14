@@ -52,7 +52,7 @@ func (u *UserUsecase) ReSendConfirmValidEmail(email string) (err error) {
 
 // ChangeUserPassword passwordを変更します。
 func (u *UserUsecase) ChangeUserPassword(id int, password string, nextPassword string) (err error) {
-	user, err := u.GetUser(id)
+	user, err := u.GetUserByID(id)
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ const (
 
 // ActivationPassword Password認証を有効化します。
 func (u *UserUsecase) ActivationPassword(id int, password string) error {
-	user, err := u.GetUser(id)
+	user, err := u.GetUserByID(id)
 	if err != nil {
 		return err
 	}

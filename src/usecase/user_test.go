@@ -197,9 +197,14 @@ type testMail struct{}
 func (r *testRepo) StoreUser(email string, hashPassword string) (id int, err error) {
 	return 0, nil
 }
-func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
+func (r *testRepo) GetUserByID(id int) (user *domain.User, err error) {
 	if id == 1 {
 		return &domain.User{Password: "ng"}, nil
+	}
+	if id == 2 {
+		hash, _ := bcrypt.GenerateFromPassword([]byte("okpassword"), bcrypt.DefaultCost)
+		hashPassword := string(hash)
+		return &domain.User{Password: hashPassword}, nil
 	}
 	if id == 3 {
 		return &domain.User{ValidPassword: true}, nil
@@ -207,9 +212,7 @@ func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
 	if id == 4 {
 		return &domain.User{ValidPassword: false}, nil
 	}
-	hash, _ := bcrypt.GenerateFromPassword([]byte("okpassword"), bcrypt.DefaultCost)
-	hashPassword := string(hash)
-	return &domain.User{Password: hashPassword}, nil
+	return
 }
 func (r *testRepo) GetUserByEmail(email string) (user *domain.User, err error) {
 	if email == "ng@mail" {

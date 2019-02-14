@@ -44,8 +44,8 @@ func (s *SQLHandler) StoreUser(email string, hashPassword string) (id int, err e
 	return
 }
 
-// GetUser Userを取得しデータを返却します。
-func (s *SQLHandler) GetUser(id int) (user *domain.User, err error) {
+// GetUserByID Userを取得しデータを返却します。
+func (s *SQLHandler) GetUserByID(id int) (user *domain.User, err error) {
 	user = new(domain.User)
 	err = s.Conn.QueryRow("select id, email, password, valid_email, valid_password from users where id = $1;", id).Scan(&user.ID, &user.Email, &user.Password, &user.ValidEmail, &user.ValidPassword)
 	return

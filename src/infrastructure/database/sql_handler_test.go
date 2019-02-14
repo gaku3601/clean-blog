@@ -38,7 +38,7 @@ func Test(t *testing.T) {
 		db := setup()
 		defer tearDown()
 		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
-		user, _ := s.GetUser(1)
+		user, _ := s.GetUserByID(1)
 		Convey("IDが格納されているか", func() {
 			So(user.ID, ShouldEqual, 1)
 		})
