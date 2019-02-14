@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"errors"
 	"os"
 
 	"github.com/gaku3601/clean-blog/src/domain"
@@ -57,14 +56,6 @@ func (s *SQLHandler) StoreNonPasswordUser(email string) (id int, err error) {
 	return
 }
 
-// CheckExistUser Userが存在しているか確認し、存在している場合useridを返却します。
-func (s *SQLHandler) CheckExistUser(email string) (id int, err error) {
-	err = s.Conn.QueryRow("select id from users where email = $1;", email).Scan(&id)
-	if err != nil && err.Error() == "sql: no rows in result set" {
-		return 0, errors.New("No Data")
-	}
-	return
-}
 func (s *SQLHandler) GetUserByEmail(email string) (user *domain.User, err error) {
 	return
 }

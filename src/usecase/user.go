@@ -38,11 +38,11 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 
 // ReSendConfirmValidEmail email有効化メールの再送を行います。
 func (u *UserUsecase) ReSendConfirmValidEmail(email string) (err error) {
-	id, err := u.CheckExistUser(email)
+	user, err := u.GetUserByEmail(email)
 	if err != nil {
 		return err
 	}
-	token, err := u.createToken(id, "emailkey")
+	token, err := u.createToken(user.ID, "emailkey")
 	if err != nil {
 		return err
 	}
@@ -120,11 +120,11 @@ func (u *UserUsecase) ActivationPassword(id int, password string) error {
 
 // ForgotPassword passwordを忘れた際、email宛にpassword再設定URLを発行する。
 func (u *UserUsecase) ForgotPassword(email string) (err error) {
-	id, err := u.CheckExistUser(email)
+	user, err := u.GetUserByEmail(email)
 	if err != nil {
 		return err
 	}
-	token, err := u.createToken(id, "forgotkey")
+	token, err := u.createToken(user.ID, "forgotkey")
 	if err != nil {
 		return err
 	}

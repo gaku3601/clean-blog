@@ -258,6 +258,15 @@ func (r *testRepo) GetUserByEmail(email string) (user *domain.User, err error) {
 	if email == "ngmail@dot.com" {
 		return nil, domain.NoData
 	}
+	if email == "non@user.com" {
+		return nil, errors.New("error")
+	}
+	if email == "ok@example.com" {
+		return &domain.User{ID: 1}, nil
+	}
+	if email == "ex@example.com" {
+		return nil, errors.New("error")
+	}
 	return
 }
 func (r *testRepo) UpdateUserPassword(id int, hashPassword string) (err error) {
