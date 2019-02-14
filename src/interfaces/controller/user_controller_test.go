@@ -3,12 +3,13 @@ package controller
 import (
 	"testing"
 
+	"github.com/gaku3601/clean-blog/src/usecase"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestSignIn(t *testing.T) {
 	Convey("SignIn()処理のテスト", t, func() {
-		c := NewUserController(&testSqlHandler{}, &testMailHandler{})
+		c := NewUserController(&testUser{})
 		con := new(testContext)
 		c.SignIn(con)
 		Convey("200が返却されること", func() {
@@ -20,19 +21,36 @@ func TestSignIn(t *testing.T) {
 	})
 }
 
-type testSqlHandler struct{}
-type testMailHandler struct{}
+type testUser struct{}
 
-func (s *testSqlHandler) InsertUser(email string, password string) (id int, err error) {
+func (u *testUser) AddUser(email string, password string) (err error) {
 	return
 }
-
-func (s *testSqlHandler) FetchUserID(email string) (id int, err error) {
-	id = 1
-	err = nil
+func (u *testUser) ReSendConfirmValidEmail(email string) (err error) {
 	return
 }
-func (s *testSqlHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
+func (u *testUser) ChangeUserPassword(id int, password string, nextPassword string) (err error) {
+	return
+}
+func (u *testUser) GetAccessToken(email string, password string) (token string, err error) {
+	return "token", nil
+}
+func (u *testUser) ConfirmValidAccessToken(accessToken string) (id int, err error) {
+	return
+}
+func (u *testUser) ActivationEmail(validToken string) (err error) {
+	return
+}
+func (u *testUser) ActivationPassword(id int, password string) (err error) {
+	return
+}
+func (u *testUser) ForgotPassword(email string) (err error) {
+	return
+}
+func (u *testUser) ProcessForgotPassword(token string, newPassword string) (err error) {
+	return
+}
+func (u *testUser) CertificationSocialProfile(servise usecase.ServiseEnum, email string, uid string) (token string, err error) {
 	return
 }
 

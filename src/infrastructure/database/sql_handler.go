@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"os"
 
-	"github.com/gaku3601/clean-blog/src/interfaces/database"
 	// PostgreSQL driver
+	"github.com/gaku3601/clean-blog/src/domain"
+	"github.com/gaku3601/clean-blog/src/usecase"
 	_ "github.com/lib/pq"
 )
 
@@ -15,7 +16,7 @@ type SQLHandler struct {
 }
 
 // NewSQLHandler : SQLHandlerを返却します
-func NewSQLHandler() database.SQLHandler {
+func NewSQLHandler() usecase.UserRepository {
 	connector := fetchDatabaseEnv()
 	conn, _ := sql.Open("postgres", connector)
 	err := conn.Ping()
@@ -35,19 +36,33 @@ func fetchDatabaseEnv() (d string) {
 	return
 }
 
-// InsertUser ユーザ内容を格納します。
-func (handler *SQLHandler) InsertUser(email string, password string) (id int, err error) {
-	err = handler.Conn.QueryRow("Insert Into users (email, password) values ($1, $2) RETURNING id;", email, password).Scan(&id)
+func (s *SQLHandler) StoreUser(email string, hashPassword string) (id int, err error) {
 	return
 }
-
-func (handler *SQLHandler) FetchUserID(email string) (id int, err error) {
-	// TODO: 実装する
-	return 0, nil
+func (s *SQLHandler) GetUser(id int) (user *domain.User, err error) {
+	return
 }
-
-func (handler *SQLHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
-	// TODO: あとで実装する
-	_, err = handler.Conn.Exec("UPDATE users SET password = $2 WHERE id = $1;", id, hashPassword)
+func (s *SQLHandler) StoreNonPasswordUser(email string) (id int, err error) {
+	return
+}
+func (s *SQLHandler) CheckExistUser(email string) (id int, err error) {
+	return
+}
+func (s *SQLHandler) CheckCertificationUser(email string, password string) (id int, err error) {
+	return
+}
+func (s *SQLHandler) UpdateValidEmail(id int) (err error) {
+	return
+}
+func (s *SQLHandler) StoreSocialProfile(servise string, userID int, uid string) (err error) {
+	return
+}
+func (s *SQLHandler) CheckExistSocialProfile(servise string, uid string) (userID int, err error) {
+	return
+}
+func (s *SQLHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
+	return
+}
+func (s *SQLHandler) UpdateActivationPassword(id int, hashPassword string) (err error) {
 	return
 }

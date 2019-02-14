@@ -190,10 +190,10 @@ func Test(t *testing.T) {
 type testRepo struct{}
 type testMail struct{}
 
-func (r *testRepo) IStoreUser(email string, hashPassword string) (id int, err error) {
+func (r *testRepo) StoreUser(email string, hashPassword string) (id int, err error) {
 	return 0, nil
 }
-func (r *testRepo) IGetUser(id int) (user *domain.User, err error) {
+func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
 	if id == 1 {
 		return &domain.User{Password: "ng"}, nil
 	}
@@ -207,17 +207,17 @@ func (r *testRepo) IGetUser(id int) (user *domain.User, err error) {
 	hashPassword := string(hash)
 	return &domain.User{Password: hashPassword}, nil
 }
-func (r *testRepo) IUpdateUserPassword(id int, hashPassword string) (err error) {
+func (r *testRepo) UpdateUserPassword(id int, hashPassword string) (err error) {
 	return
 }
-func (r *testRepo) IUpdateActivationPassword(id int, hashPassword string) (err error) {
+func (r *testRepo) UpdateActivationPassword(id int, hashPassword string) (err error) {
 	return
 }
-func (r *testRepo) IStoreNonPasswordUser(email string) (id int, err error) {
+func (r *testRepo) StoreNonPasswordUser(email string) (id int, err error) {
 	return 0, nil
 }
 
-func (r *testRepo) ICheckExistUser(email string) (userID int, err error) {
+func (r *testRepo) CheckExistUser(email string) (userID int, err error) {
 	if email == "ok@example.com" {
 		userID = 1
 		err = nil
@@ -226,21 +226,21 @@ func (r *testRepo) ICheckExistUser(email string) (userID int, err error) {
 	return 0, errors.New("No Data")
 }
 
-func (r *testRepo) ICheckCertificationUser(email string, password string) (int, error) {
+func (r *testRepo) CheckCertificationUser(email string, password string) (int, error) {
 	if email == "ng@mail" {
 		return 0, errors.New("errorだよ！")
 	}
 	return 1, nil
 }
 
-func (r *testRepo) IUpdateValidEmail(id int) error {
+func (r *testRepo) UpdateValidEmail(id int) error {
 	return nil
 }
 
-func (r *testRepo) IStoreSocialProfile(servise string, userID int, uid string) error {
+func (r *testRepo) StoreSocialProfile(servise string, userID int, uid string) error {
 	return nil
 }
-func (r *testRepo) ICheckExistSocialProfile(servise string, uid string) (userID int, err error) {
+func (r *testRepo) CheckExistSocialProfile(servise string, uid string) (userID int, err error) {
 	if uid == "okuid" {
 		userID = 1
 		err = nil
@@ -249,10 +249,10 @@ func (r *testRepo) ICheckExistSocialProfile(servise string, uid string) (userID 
 	return 0, errors.New("No Data")
 }
 
-func (m *testMail) ISendConfirmValidEmail(email string, token string) (err error) {
+func (m *testMail) SendConfirmValidEmail(email string, token string) (err error) {
 	return
 }
 
-func (m *testMail) ISendForgotPasswordMail(email string, token string) (err error) {
+func (m *testMail) SendForgotPasswordMail(email string, token string) (err error) {
 	return
 }
