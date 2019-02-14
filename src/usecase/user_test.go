@@ -92,10 +92,7 @@ func Test(t *testing.T) {
 
 			Convey("User Tableにも存在していない場合、", func() {
 				token, err := u.CertificationSocialProfile(ServiceEnum(google), "ngmail@dot.com", "nguid")
-				Convey("UserTableにNonPasswordUserで格納し、errにnilが格納されること", func() {
-					So(err, ShouldBeNil)
-				})
-				Convey("SocialTableにデータを格納し、errにnilが格納されること", func() {
+				Convey("UserTable、SocialProfileにdataを格納し、errにnilが格納されること", func() {
 					So(err, ShouldBeNil)
 				})
 				Convey("email有効化用のメールを送信し、errにnilが格納されること", func() {
@@ -275,7 +272,7 @@ func (r *testRepo) UpdateUserPassword(id int, hashPassword string) (err error) {
 func (r *testRepo) UpdateActivationPassword(id int, hashPassword string) (err error) {
 	return
 }
-func (r *testRepo) StoreNonPasswordUser(email string) (id int, err error) {
+func (r *testRepo) StoreNonPasswordUserAndSocialProfile(email string, service string, uid string) (id int, err error) {
 	return 0, nil
 }
 

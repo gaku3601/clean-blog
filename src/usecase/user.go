@@ -168,15 +168,10 @@ func (u *UserUsecase) CertificationSocialProfile(service ServiceEnum, email stri
 			}
 			return token, err
 		} else if err == domain.NoData {
-			// User Tableに登録を実施する
-			userID, err = u.StoreNonPasswordUser(email)
+			// User、SocialProfileにdata登録を実施する
+			userID, err = u.StoreNonPasswordUserAndSocialProfile(email, string(service), uid)
 			if err != nil {
 				return "", nil
-			}
-			// SocialProfile Tableに登録を実施する
-			err = u.StoreSocialProfile(string(service), userID, uid)
-			if err != nil {
-				return "", err
 			}
 			// email有効化用のメールを送信する。
 			token, err := u.createToken(userID, "emailkey")

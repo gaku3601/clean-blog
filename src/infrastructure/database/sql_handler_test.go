@@ -55,23 +55,27 @@ func Test(t *testing.T) {
 			So(user.ValidPassword, ShouldBeFalse)
 		})
 	})
-	Convey("StoreNonPasswordUser()", t, func() {
+	Convey("StoreNonPasswordUserAndSocialProfile()", t, func() {
 		db := setup()
 		defer tearDown()
-		id, _ := s.StoreNonPasswordUser("ex@example.com")
+		id, _ := s.StoreNonPasswordUserAndSocialProfile("ex@example.com", "google", "okuid")
 		// 検証
-		var Email string
-		var Password string
-		var ValidPassword bool
-		db.QueryRow("select email, password, valid_password from users where id = 1").Scan(&Email, &Password, &ValidPassword)
-		Convey("正常に格納されるか", func() {
-			So(Email, ShouldEqual, "ex@example.com")
+		var email string
+		var validPassword bool
+		db.QueryRow("select email, valid_password from users where id = 1").Scan(&email, &validPassword)
+		var uid string
+		db.QueryRow("select uid from social_profiles where id = 1").Scan(&uid)
+		Convey("user tableに正常に格納されるか", func() {
+			So(email, ShouldEqual, "ex@example.com")
+		})
+		Convey("social profile tableに正常に格納されるか", func() {
+			So(uid, ShouldEqual, "okuid")
 		})
 		Convey("idが返却されているか", func() {
 			So(id, ShouldEqual, 1)
 		})
 		Convey("valid_passwordはfalseとなっているか", func() {
-			So(ValidPassword, ShouldEqual, false)
+			So(validPassword, ShouldEqual, false)
 		})
 	})
 }

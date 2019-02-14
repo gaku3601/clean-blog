@@ -50,9 +50,29 @@ func (s *SQLHandler) GetUserByID(id int) (user *domain.User, err error) {
 	return
 }
 
-// StoreNonPasswordUser PasswordなしでUserを格納します。
-func (s *SQLHandler) StoreNonPasswordUser(email string) (id int, err error) {
-	err = s.Conn.QueryRow("Insert Into users (email) values ($1) RETURNING id;", email).Scan(&id)
+// StoreNonPasswordUserAndSocialProfile PasswordなしでUserを格納、ならびにSocialProfileにも格納する。
+func (s *SQLHandler) StoreNonPasswordUserAndSocialProfile(email string, service string, uid string) (id int, err error) {
+	tx, err := s.Conn.Begin()
+	if err != nil {
+		return 0, err
+	}
+	defer func() {
+		// panicがおきたらロールバック
+		if err := recover(); err != nil {
+			tx.Rollback()
+		}
+	}()
+	err = tx.QueryRow("Insert Into users (email) values ($1) RETURNING id;", email).Scan(&id)
+	if err != nil {
+		tx.Rollback()
+		return 0, err
+	}
+	_, err = tx.Exec("Insert Into social_profiles (service,uid,user_id) values ($1,$2,$3);", service, uid, id)
+	if err != nil {
+		tx.Rollback()
+		return 0, err
+	}
+	tx.Commit()
 	return
 }
 

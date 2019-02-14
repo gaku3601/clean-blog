@@ -7,10 +7,10 @@ type UserRepository interface {
 	StoreUser(email string, hashPassword string) (id int, err error)
 	GetUserByID(id int) (user *domain.User, err error)
 	GetUserByEmail(email string) (user *domain.User, err error)
-	StoreNonPasswordUser(email string) (id int, err error)
+	StoreNonPasswordUserAndSocialProfile(email string, service string, uid string) (id int, err error)
 	UpdateValidEmail(id int) error
-	StoreSocialProfile(servise string, userID int, uid string) error
-	CheckExistSocialProfile(servise string, uid string) (userID int, err error)
+	StoreSocialProfile(service string, userID int, uid string) error
+	CheckExistSocialProfile(service string, uid string) (userID int, err error)
 	UpdateUserPassword(id int, hashPassword string) (err error)
 	UpdateActivationPassword(id int, hashPassword string) (err error)
 }
