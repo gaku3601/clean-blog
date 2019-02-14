@@ -50,7 +50,7 @@ func (u *testUser) ForgotPassword(email string) (err error) {
 func (u *testUser) ProcessForgotPassword(token string, newPassword string) (err error) {
 	return
 }
-func (u *testUser) CertificationSocialProfile(servise usecase.ServiseEnum, email string, uid string) (token string, err error) {
+func (u *testUser) CertificationSocialProfile(service usecase.ServiceEnum, email string, uid string) (token string, err error) {
 	return
 }
 

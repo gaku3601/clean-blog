@@ -3,7 +3,9 @@
 CREATE TABLE users (
   id serial PRIMARY KEY,
   email varchar(50) NOT NULL,
-  password  char(60) NOT NULL,
+  password  char(60),
+  valid_email boolean NOT NULL DEFAULT FALSE,
+  valid_password boolean NOT NULL DEFAULT FALSE,
   UNIQUE(email)
 );
 
