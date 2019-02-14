@@ -19,15 +19,19 @@ func Test(t *testing.T) {
 		db := setup()
 		defer tearDown()
 		id, _ := s.StoreUser("ex@example.com", "p@ssword")
+		// 検証
+		var Email string
+		var Password string
+		var ValidPassword bool
+		db.QueryRow("select email, password, valid_password from users where id = 1").Scan(&Email, &Password, &ValidPassword)
 		Convey("正常に格納されるか", func() {
-			// 検証
-			var Email string
-			var Password string
-			db.QueryRow("select email, password from users where id = 1").Scan(&Email, &Password)
 			So(Email, ShouldEqual, "ex@example.com")
 		})
 		Convey("idが返却されているか", func() {
 			So(id, ShouldEqual, 1)
+		})
+		Convey("valid_passwordはtrueが格納されているか", func() {
+			So(ValidPassword, ShouldBeTrue)
 		})
 	})
 	Convey("GetUser()", t, func() {
