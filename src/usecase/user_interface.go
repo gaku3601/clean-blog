@@ -10,5 +10,5 @@ type UserInterface interface {
 	ActivationPassword(id int, password string) (err error)
 	ForgotPassword(email string) (err error)
 	ProcessForgotPassword(token string, newPassword string) (err error)
-	CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error)
+	CertificationSocialProfile(service ServiceEnum, email string, uid string) (token string, err error)
 }

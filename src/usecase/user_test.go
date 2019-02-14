@@ -65,17 +65,46 @@ func Test(t *testing.T) {
 		})
 	})
 	Convey("CertificationSocialProfile()", t, func() {
-		Convey("SocialProfile Tableに既にデータが登録されている場合、JWT tokenを返却する", func() {
-			token, _ := u.CertificationSocialProfile(ServiseEnum(google), "ok@example.com", "okuid")
-			So(token, ShouldNotBeEmpty)
+		Convey("SocialProfile Tableに既にデータが登録されている場合、", func() {
+			Convey("JWT Tokenを返却する", func() {
+				token, _ := u.CertificationSocialProfile(ServiceEnum(google), "okmail@dot.com", "okuid")
+				t, _ := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+					return []byte("accesskey"), nil
+				})
+				id := int(t.Claims.(jwt.MapClaims)["id"].(float64))
+				So(id, ShouldEqual, 1)
+			})
 		})
-		Convey("SocialProfile Tableにデータが登録されておらず、User Tableには存在している場合、登録を実施し、JWT tokenを返却する", func() {
-			token, _ := u.CertificationSocialProfile(ServiseEnum(google), "ok@example.com", "nguid")
-			So(token, ShouldNotBeEmpty)
-		})
-		Convey("SocialProfile Table、User Table共にデータが存在しない場合、User Table・Social Table共にデータを格納し、JWT tokenを返却しない。", func() {
-			token, _ := u.CertificationSocialProfile(ServiseEnum(google), "ng@example.com", "nguid")
-			So(token, ShouldBeEmpty)
+		Convey("SocialProfile Tableにデータが登録されていない場合、", func() {
+			Convey("User TableにはUserが存在している場合、", func() {
+				token, err := u.CertificationSocialProfile(ServiceEnum(google), "okmail@dot.com", "nguid")
+				Convey("SocialProfileに登録を実施し、errにnilが格納されていること", func() {
+					So(err, ShouldBeNil)
+				})
+				Convey("JWT tokenが返却されること", func() {
+					t, _ := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+						return []byte("accesskey"), nil
+					})
+					id := int(t.Claims.(jwt.MapClaims)["id"].(float64))
+					So(id, ShouldEqual, 1)
+				})
+			})
+
+			Convey("User Tableにも存在していない場合、", func() {
+				token, err := u.CertificationSocialProfile(ServiceEnum(google), "ngmail@dot.com", "nguid")
+				Convey("UserTableにNonPasswordUserで格納し、errにnilが格納されること", func() {
+					So(err, ShouldBeNil)
+				})
+				Convey("SocialTableにデータを格納し、errにnilが格納されること", func() {
+					So(err, ShouldBeNil)
+				})
+				Convey("email有効化用のメールを送信し、errにnilが格納されること", func() {
+					So(err, ShouldBeNil)
+				})
+				Convey("JWT Tokenは返却されないことを確認する。", func() {
+					So(token, ShouldBeEmpty)
+				})
+			})
 		})
 	})
 	Convey("ChangeUserPassword()", t, func() {
@@ -223,6 +252,12 @@ func (r *testRepo) GetUserByEmail(email string) (user *domain.User, err error) {
 		hashPassword := string(hash)
 		return &domain.User{ID: 1, Password: hashPassword}, nil
 	}
+	if email == "okmail@dot.com" {
+		return &domain.User{ID: 1}, nil
+	}
+	if email == "ngmail@dot.com" {
+		return nil, domain.NoData
+	}
 	return
 }
 func (r *testRepo) UpdateUserPassword(id int, hashPassword string) (err error) {
@@ -241,7 +276,7 @@ func (r *testRepo) CheckExistUser(email string) (userID int, err error) {
 		err = nil
 		return
 	}
-	return 0, errors.New("No Data")
+	return 0, domain.NoData
 }
 
 func (r *testRepo) CheckCertificationUser(email string, password string) (int, error) {
@@ -264,7 +299,7 @@ func (r *testRepo) CheckExistSocialProfile(servise string, uid string) (userID i
 		err = nil
 		return
 	}
-	return 0, errors.New("No Data")
+	return 0, domain.NoData
 }
 
 func (m *testMail) SendConfirmValidEmail(email string, token string) (err error) {

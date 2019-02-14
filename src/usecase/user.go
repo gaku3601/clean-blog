@@ -98,10 +98,10 @@ func (u *UserUsecase) ActivationEmail(validToken string) error {
 	return err
 }
 
-type ServiseEnum string
+type ServiceEnum string
 
 const (
-	google ServiseEnum = "google"
+	google ServiceEnum = "google"
 )
 
 // ActivationPassword Password認証を有効化します。
@@ -144,34 +144,56 @@ func (u *UserUsecase) ProcessForgotPassword(token string, newPassword string) (e
 }
 
 // CertificationSocialProfile OpenID認証を行います。
-func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error) {
-	userID, err := u.CheckExistSocialProfile(string(servise), uid)
-	if err != nil && err.Error() == "No Data" {
-		userID, err := u.CheckExistUser(email)
-		if err != nil && err.Error() == "No Data" {
-			userID, err := u.StoreNonPasswordUser(email)
+func (u *UserUsecase) CertificationSocialProfile(service ServiceEnum, email string, uid string) (token string, err error) {
+	userID, err := u.CheckExistSocialProfile(string(service), uid)
+	if err == nil {
+		// JWT トークンを返却
+		token, err = u.createToken(userID, "accesskey")
+		if err != nil {
+			return "", err
+		}
+		return token, err
+	} else if err == domain.NoData {
+		user, err := u.GetUserByEmail(email)
+		if err == nil {
+			// SocialProfileに登録を実施する。
+			err = u.StoreSocialProfile(string(service), user.ID, uid)
 			if err != nil {
 				return "", err
 			}
-			u.StoreSocialProfile(string(servise), userID, uid)
+			// JWT トークンを返却
+			token, err = u.createToken(user.ID, "accesskey")
+			if err != nil {
+				return "", err
+			}
+			return token, err
+		} else if err == domain.NoData {
+			// User Tableに登録を実施する
+			userID, err = u.StoreNonPasswordUser(email)
+			if err != nil {
+				return "", nil
+			}
+			// SocialProfile Tableに登録を実施する
+			err = u.StoreSocialProfile(string(service), userID, uid)
+			if err != nil {
+				return "", err
+			}
+			// email有効化用のメールを送信する。
 			token, err := u.createToken(userID, "emailkey")
 			if err != nil {
 				return "", err
 			}
-			u.SendConfirmValidEmail(email, token)
+			err = u.SendConfirmValidEmail(email, token)
+			if err != nil {
+				return "", err
+			}
 			return "", nil
-		} else if err != nil {
+		} else {
 			return "", err
 		}
-		err = u.StoreSocialProfile(string(servise), userID, uid)
-		if err != nil {
-			return "", err
-		}
-	} else if err != nil {
+	} else {
 		return "", err
 	}
-	token, err = u.createToken(userID, "accesskey")
-	return
 }
 
 // createHashPassword passwordをhash化し返却します。
