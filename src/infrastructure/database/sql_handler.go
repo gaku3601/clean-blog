@@ -36,15 +36,20 @@ func fetchDatabaseEnv() (d string) {
 	return
 }
 
+// StoreUser Userを格納します。
 func (s *SQLHandler) StoreUser(email string, hashPassword string) (id int, err error) {
 	err = s.Conn.QueryRow("Insert Into users (email, password, valid_password) values ($1, $2, $3) RETURNING id;", email, hashPassword, true).Scan(&id)
 	return
 }
+
+// GetUser Userを取得しデータを返却します。
 func (s *SQLHandler) GetUser(id int) (user *domain.User, err error) {
 	user = new(domain.User)
 	err = s.Conn.QueryRow("select id, email, password, valid_email, valid_password from users where id = $1;", id).Scan(&user.ID, &user.Email, &user.Password, &user.ValidEmail, &user.ValidPassword)
 	return
 }
+
+// StoreNonPasswordUser PasswordなしでUserを格納します。
 func (s *SQLHandler) StoreNonPasswordUser(email string) (id int, err error) {
 	err = s.Conn.QueryRow("Insert Into users (email) values ($1) RETURNING id;", email).Scan(&id)
 	return
