@@ -11,6 +11,25 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func Test(t *testing.T) {
+	Convey("StoreUser()", t, func() {
+		db := setup()
+		defer tearDown()
+		conn, _ := sql.Open("postgres", fetchDatabaseTestEnv())
+		s := &SQLHandler{conn}
+		id, _ := s.StoreUser("ex@example.com", "p@ssword")
+		Convey("正常に格納されるか", func() {
+			// 検証
+			var Email string
+			var Password string
+			db.QueryRow("select email, password from users where id = 1").Scan(&Email, &Password)
+			So(Email, ShouldEqual, "ex@example.com")
+		})
+		Convey("idが返却されているか", func() {
+			So(id, ShouldEqual, 1)
+		})
+	})
+}
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {
 		os.Setenv("DATABASE", "testset")

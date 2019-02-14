@@ -37,6 +37,7 @@ func fetchDatabaseEnv() (d string) {
 }
 
 func (s *SQLHandler) StoreUser(email string, hashPassword string) (id int, err error) {
+	err = s.Conn.QueryRow("Insert Into users (email, password) values ($1, $2) RETURNING id;", email, hashPassword).Scan(&id)
 	return
 }
 func (s *SQLHandler) GetUser(id int) (user *domain.User, err error) {
