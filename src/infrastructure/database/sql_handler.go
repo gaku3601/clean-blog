@@ -36,33 +36,33 @@ func fetchDatabaseEnv() (d string) {
 	return
 }
 
-func (s *SQLHandler) IStoreUser(email string, hashPassword string) (id int, err error) {
+func (s *SQLHandler) StoreUser(email string, hashPassword string) (id int, err error) {
 	return
 }
-func (s *SQLHandler) IGetUser(id int) (user *domain.User, err error) {
+func (s *SQLHandler) GetUser(id int) (user *domain.User, err error) {
 	return
 }
-func (s *SQLHandler) IStoreNonPasswordUser(email string) (id int, err error) {
+func (s *SQLHandler) StoreNonPasswordUser(email string) (id int, err error) {
 	return
 }
-func (s *SQLHandler) ICheckExistUser(email string) (id int, err error) {
+func (s *SQLHandler) CheckExistUser(email string) (id int, err error) {
 	return
 }
-func (s *SQLHandler) ICheckCertificationUser(email string, password string) (id int, err error) {
+func (s *SQLHandler) CheckCertificationUser(email string, password string) (id int, err error) {
 	return
 }
-func (s *SQLHandler) IUpdateValidEmail(id int) (err error) {
+func (s *SQLHandler) UpdateValidEmail(id int) (err error) {
 	return
 }
-func (s *SQLHandler) IStoreSocialProfile(servise string, userID int, uid string) (err error) {
+func (s *SQLHandler) StoreSocialProfile(servise string, userID int, uid string) (err error) {
 	return
 }
-func (s *SQLHandler) ICheckExistSocialProfile(servise string, uid string) (userID int, err error) {
+func (s *SQLHandler) CheckExistSocialProfile(servise string, uid string) (userID int, err error) {
 	return
 }
-func (s *SQLHandler) IUpdateUserPassword(id int, hashPassword string) (err error) {
+func (s *SQLHandler) UpdateUserPassword(id int, hashPassword string) (err error) {
 	return
 }
-func (s *SQLHandler) IUpdateActivationPassword(id int, hashPassword string) (err error) {
+func (s *SQLHandler) UpdateActivationPassword(id int, hashPassword string) (err error) {
 	return
 }

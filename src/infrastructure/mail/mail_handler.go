@@ -9,9 +9,9 @@ func NewMailHandler() usecase.UserMail {
 	return new(MailHandler)
 }
 
-func (m *MailHandler) ISendConfirmValidEmail(email string, token string) (err error) {
+func (m *MailHandler) SendConfirmValidEmail(email string, token string) (err error) {
 	return
 }
-func (m *MailHandler) ISendForgotPasswordMail(email string, token string) (err error) {
+func (m *MailHandler) SendForgotPasswordMail(email string, token string) (err error) {
 	return
 }

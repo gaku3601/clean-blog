@@ -24,7 +24,7 @@ func NewUserUsecase(sqlHandler UserRepository, mailHandler UserMail) *UserUsecas
 func (u *UserUsecase) AddUser(email string, password string) error {
 	d := new(domain.User)
 	h := u.createHashPassword(password)
-	id, err := u.IStoreUser(d.Email, h)
+	id, err := u.StoreUser(d.Email, h)
 	if err != nil {
 		return err
 	}
@@ -32,13 +32,13 @@ func (u *UserUsecase) AddUser(email string, password string) error {
 	if err != nil {
 		return err
 	}
-	u.ISendConfirmValidEmail(email, token)
+	u.SendConfirmValidEmail(email, token)
 	return nil
 }
 
 // ReSendConfirmValidEmail email有効化メールの再送を行います。
 func (u *UserUsecase) ReSendConfirmValidEmail(email string) (err error) {
-	id, err := u.ICheckExistUser(email)
+	id, err := u.CheckExistUser(email)
 	if err != nil {
 		return err
 	}
@@ -46,13 +46,13 @@ func (u *UserUsecase) ReSendConfirmValidEmail(email string) (err error) {
 	if err != nil {
 		return err
 	}
-	err = u.ISendConfirmValidEmail(email, token)
+	err = u.SendConfirmValidEmail(email, token)
 	return
 }
 
 // ChangeUserPassword passwordを変更します。
 func (u *UserUsecase) ChangeUserPassword(id int, password string, nextPassword string) (err error) {
-	user, err := u.IGetUser(id)
+	user, err := u.GetUser(id)
 	if err != nil {
 		return err
 	}
@@ -61,13 +61,13 @@ func (u *UserUsecase) ChangeUserPassword(id int, password string, nextPassword s
 		return errors.New("Passwords do not match")
 	}
 	hashPassword := u.createHashPassword(nextPassword)
-	err = u.IUpdateUserPassword(id, hashPassword)
+	err = u.UpdateUserPassword(id, hashPassword)
 	return err
 }
 
 // GetAccessToken AccessTokenを返却します
 func (u *UserUsecase) GetAccessToken(email string, password string) (string, error) {
-	id, err := u.ICheckCertificationUser(email, password)
+	id, err := u.CheckCertificationUser(email, password)
 	if err != nil {
 		return "", err
 	}
@@ -90,7 +90,7 @@ func (u *UserUsecase) ActivationEmail(validToken string) error {
 	if err != nil {
 		return err
 	}
-	err = u.IUpdateValidEmail(id)
+	err = u.UpdateValidEmail(id)
 	return err
 }
 
@@ -102,7 +102,7 @@ const (
 
 // ActivationPassword Password認証を有効化します。
 func (u *UserUsecase) ActivationPassword(id int, password string) error {
-	user, err := u.IGetUser(id)
+	user, err := u.GetUser(id)
 	if err != nil {
 		return err
 	}
@@ -110,13 +110,13 @@ func (u *UserUsecase) ActivationPassword(id int, password string) error {
 		return errors.New("passwordが既に有効です。")
 	}
 	hashPassword := u.createHashPassword(password)
-	err = u.IUpdateActivationPassword(id, hashPassword)
+	err = u.UpdateActivationPassword(id, hashPassword)
 	return err
 }
 
 // ForgotPassword passwordを忘れた際、email宛にpassword再設定URLを発行する。
 func (u *UserUsecase) ForgotPassword(email string) (err error) {
-	id, err := u.ICheckExistUser(email)
+	id, err := u.CheckExistUser(email)
 	if err != nil {
 		return err
 	}
@@ -124,7 +124,7 @@ func (u *UserUsecase) ForgotPassword(email string) (err error) {
 	if err != nil {
 		return err
 	}
-	err = u.ISendForgotPasswordMail(email, token)
+	err = u.SendForgotPasswordMail(email, token)
 	return
 }
 
@@ -135,31 +135,31 @@ func (u *UserUsecase) ProcessForgotPassword(token string, newPassword string) (e
 		return err
 	}
 	hashPassword := u.createHashPassword(newPassword)
-	err = u.IUpdateActivationPassword(id, hashPassword)
+	err = u.UpdateActivationPassword(id, hashPassword)
 	return
 }
 
 // CertificationSocialProfile OpenID認証を行います。
 func (u *UserUsecase) CertificationSocialProfile(servise ServiseEnum, email string, uid string) (token string, err error) {
-	userID, err := u.ICheckExistSocialProfile(string(servise), uid)
+	userID, err := u.CheckExistSocialProfile(string(servise), uid)
 	if err != nil && err.Error() == "No Data" {
-		userID, err := u.ICheckExistUser(email)
+		userID, err := u.CheckExistUser(email)
 		if err != nil && err.Error() == "No Data" {
-			userID, err := u.IStoreNonPasswordUser(email)
+			userID, err := u.StoreNonPasswordUser(email)
 			if err != nil {
 				return "", err
 			}
-			u.IStoreSocialProfile(string(servise), userID, uid)
+			u.StoreSocialProfile(string(servise), userID, uid)
 			token, err := u.createToken(userID, "emailkey")
 			if err != nil {
 				return "", err
 			}
-			u.ISendConfirmValidEmail(email, token)
+			u.SendConfirmValidEmail(email, token)
 			return "", nil
 		} else if err != nil {
 			return "", err
 		}
-		err = u.IStoreSocialProfile(string(servise), userID, uid)
+		err = u.StoreSocialProfile(string(servise), userID, uid)
 		if err != nil {
 			return "", err
 		}
