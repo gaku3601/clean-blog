@@ -74,6 +74,19 @@ func Test(t *testing.T) {
 			So(ValidPassword, ShouldEqual, false)
 		})
 	})
+	Convey("CheckExistUser()", t, func() {
+		db := setup()
+		defer tearDown()
+		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
+		Convey("IDが返却されているか", func() {
+			id, _ := s.CheckExistUser("ex@mail")
+			So(id, ShouldEqual, 1)
+		})
+		Convey("ユーザが存在しない場合が「No Data」errorが返却されているか", func() {
+			_, err := s.CheckExistUser("ex@falsemail")
+			So(err.Error(), ShouldEqual, "No Data")
+		})
+	})
 }
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {

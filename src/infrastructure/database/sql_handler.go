@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"os"
 
 	// PostgreSQL driver
@@ -54,7 +55,13 @@ func (s *SQLHandler) StoreNonPasswordUser(email string) (id int, err error) {
 	err = s.Conn.QueryRow("Insert Into users (email) values ($1) RETURNING id;", email).Scan(&id)
 	return
 }
+
+// CheckExistUser Userが存在しているか確認し、存在している場合useridを返却します。
 func (s *SQLHandler) CheckExistUser(email string) (id int, err error) {
+	err = s.Conn.QueryRow("select id from users where email = $1;", email).Scan(&id)
+	if err != nil && err.Error() == "sql: no rows in result set" {
+		return 0, errors.New("No Data")
+	}
 	return
 }
 func (s *SQLHandler) CheckCertificationUser(email string, password string) (id int, err error) {
