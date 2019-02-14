@@ -55,6 +55,27 @@ func Test(t *testing.T) {
 			So(user.ValidPassword, ShouldBeFalse)
 		})
 	})
+	Convey("GetUserByEmail()", t, func() {
+		db := setup()
+		defer tearDown()
+		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
+		user, _ := s.GetUserByEmail("ex@mail")
+		Convey("IDが格納されているか", func() {
+			So(user.ID, ShouldEqual, 1)
+		})
+		Convey("Emailが格納されているか", func() {
+			So(user.Email, ShouldEqual, "ex@mail")
+		})
+		Convey("Passwordが格納されているか", func() {
+			So(strings.TrimSpace(user.Password), ShouldEqual, "testpass")
+		})
+		Convey("ValidEmailが格納されているか", func() {
+			So(user.ValidEmail, ShouldBeFalse)
+		})
+		Convey("ValidPasswordが格納されているか", func() {
+			So(user.ValidPassword, ShouldBeFalse)
+		})
+	})
 	Convey("StoreNonPasswordUserAndSocialProfile()", t, func() {
 		db := setup()
 		defer tearDown()

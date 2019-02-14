@@ -50,6 +50,13 @@ func (s *SQLHandler) GetUserByID(id int) (user *domain.User, err error) {
 	return
 }
 
+// GetUserByEmail EmailからUserを検索し返却する。
+func (s *SQLHandler) GetUserByEmail(email string) (user *domain.User, err error) {
+	user = new(domain.User)
+	err = s.Conn.QueryRow("select id, email, password, valid_email, valid_password from users where email = $1;", email).Scan(&user.ID, &user.Email, &user.Password, &user.ValidEmail, &user.ValidPassword)
+	return
+}
+
 // StoreNonPasswordUserAndSocialProfile PasswordなしでUserを格納、ならびにSocialProfileにも格納する。
 func (s *SQLHandler) StoreNonPasswordUserAndSocialProfile(email string, service string, uid string) (id int, err error) {
 	tx, err := s.Conn.Begin()
@@ -76,9 +83,6 @@ func (s *SQLHandler) StoreNonPasswordUserAndSocialProfile(email string, service 
 	return
 }
 
-func (s *SQLHandler) GetUserByEmail(email string) (user *domain.User, err error) {
-	return
-}
 func (s *SQLHandler) UpdateValidEmail(id int) (err error) {
 	return
 }
