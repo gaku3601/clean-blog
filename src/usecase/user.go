@@ -67,11 +67,15 @@ func (u *UserUsecase) ChangeUserPassword(id int, password string, nextPassword s
 
 // GetAccessToken AccessTokenを返却します
 func (u *UserUsecase) GetAccessToken(email string, password string) (string, error) {
-	id, err := u.CheckCertificationUser(email, password)
+	user, err := u.GetUserByEmail(email)
 	if err != nil {
 		return "", err
 	}
-	token, err := u.createToken(id, "accesskey")
+	if !u.checkHashPassword(password, user.Password) {
+		return "", errors.New("パスワードが間違っています。")
+	}
+
+	token, err := u.createToken(user.ID, "accesskey")
 	if err != nil {
 		return "", err
 	}

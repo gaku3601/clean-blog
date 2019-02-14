@@ -65,7 +65,7 @@ func (s *SQLHandler) CheckExistUser(email string) (id int, err error) {
 	}
 	return
 }
-func (s *SQLHandler) CheckCertificationUser(email string, password string) (id int, err error) {
+func (s *SQLHandler) GetUserByEmail(email string) (user *domain.User, err error) {
 	return
 }
 func (s *SQLHandler) UpdateValidEmail(id int) (err error) {

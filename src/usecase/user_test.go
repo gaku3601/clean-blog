@@ -43,7 +43,11 @@ func Test(t *testing.T) {
 			_, err := u.GetAccessToken("ng@mail", "ngpass")
 			So(err, ShouldNotBeNil)
 		})
-		Convey("Userが存在している場合、tokenが返却されること", func() {
+		Convey("Passwordが不一致の場合、errを返却する", func() {
+			_, err := u.GetAccessToken("ok@mail", "ngpass")
+			So(err, ShouldNotBeNil)
+		})
+		Convey("Userが存在しておりパスワードも正しい場合、tokenが返却されること", func() {
 			token, _ := u.GetAccessToken("ok@mail", "okpass")
 			So(token, ShouldNotBeEmpty)
 		})
@@ -206,6 +210,17 @@ func (r *testRepo) GetUser(id int) (user *domain.User, err error) {
 	hash, _ := bcrypt.GenerateFromPassword([]byte("okpassword"), bcrypt.DefaultCost)
 	hashPassword := string(hash)
 	return &domain.User{Password: hashPassword}, nil
+}
+func (r *testRepo) GetUserByEmail(email string) (user *domain.User, err error) {
+	if email == "ng@mail" {
+		return nil, errors.New("NoData")
+	}
+	if email == "ok@mail" {
+		hash, _ := bcrypt.GenerateFromPassword([]byte("okpass"), bcrypt.DefaultCost)
+		hashPassword := string(hash)
+		return &domain.User{ID: 1, Password: hashPassword}, nil
+	}
+	return
 }
 func (r *testRepo) UpdateUserPassword(id int, hashPassword string) (err error) {
 	return
