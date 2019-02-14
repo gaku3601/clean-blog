@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gaku3601/clean-blog/src/domain"
 	_ "github.com/lib/pq"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -53,6 +54,10 @@ func Test(t *testing.T) {
 		})
 		Convey("ValidPasswordが格納されているか", func() {
 			So(user.ValidPassword, ShouldBeFalse)
+		})
+		_, err := s.GetUserByID(2)
+		Convey("dataが存在しない場合、NoData Errorが返却されるか", func() {
+			So(err, ShouldEqual, domain.NoData)
 		})
 	})
 	Convey("GetUserByEmail()", t, func() {
