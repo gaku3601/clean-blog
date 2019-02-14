@@ -51,6 +51,25 @@ func Test(t *testing.T) {
 			So(user.ValidPassword, ShouldBeFalse)
 		})
 	})
+	Convey("StoreNonPasswordUser()", t, func() {
+		db := setup()
+		defer tearDown()
+		id, _ := s.StoreNonPasswordUser("ex@example.com")
+		// 検証
+		var Email string
+		var Password string
+		var ValidPassword bool
+		db.QueryRow("select email, password, valid_password from users where id = 1").Scan(&Email, &Password, &ValidPassword)
+		Convey("正常に格納されるか", func() {
+			So(Email, ShouldEqual, "ex@example.com")
+		})
+		Convey("idが返却されているか", func() {
+			So(id, ShouldEqual, 1)
+		})
+		Convey("valid_passwordはfalseとなっているか", func() {
+			So(ValidPassword, ShouldEqual, false)
+		})
+	})
 }
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {
