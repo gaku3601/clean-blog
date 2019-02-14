@@ -83,7 +83,9 @@ func (s *SQLHandler) StoreNonPasswordUserAndSocialProfile(email string, service 
 	return
 }
 
+// UpdateValidEmail valid_emailをtrueに変更します。
 func (s *SQLHandler) UpdateValidEmail(id int) (err error) {
+	_, err = s.Conn.Exec("Update users Set valid_email = $2 Where id = $1;", id, true)
 	return
 }
 func (s *SQLHandler) StoreSocialProfile(servise string, userID int, uid string) (err error) {

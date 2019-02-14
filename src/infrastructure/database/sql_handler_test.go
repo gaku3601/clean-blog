@@ -99,6 +99,19 @@ func Test(t *testing.T) {
 			So(validPassword, ShouldEqual, false)
 		})
 	})
+	Convey("UpdateValidEmail()", t, func() {
+		db := setup()
+		defer tearDown()
+		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
+
+		s.UpdateValidEmail(1)
+
+		var validEmail bool
+		db.QueryRow("select valid_email from users where id = 1").Scan(&validEmail)
+		Convey("valid_emailはtrueとなっているか", func() {
+			So(validEmail, ShouldBeTrue)
+		})
+	})
 }
 func TestNewSqlHandler(t *testing.T) {
 	Convey("DBと接続されていない場合、処理が終了されること", t, func() {
