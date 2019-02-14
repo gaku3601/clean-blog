@@ -34,7 +34,7 @@ func Test(t *testing.T) {
 			So(ValidPassword, ShouldBeTrue)
 		})
 	})
-	Convey("GetUser()", t, func() {
+	Convey("GetUserByID()", t, func() {
 		db := setup()
 		defer tearDown()
 		db.Exec("insert into users (email,password) values ($1,$2)", "ex@mail", "testpass")
