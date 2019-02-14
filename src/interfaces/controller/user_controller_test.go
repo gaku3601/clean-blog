@@ -3,13 +3,13 @@ package controller
 import (
 	"testing"
 
-	"github.com/gaku3601/clean-blog/src/domain"
+	"github.com/gaku3601/clean-blog/src/usecase"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestSignIn(t *testing.T) {
 	Convey("SignIn()処理のテスト", t, func() {
-		c := NewUserController(&testSqlHandler{}, &testMailHandler{})
+		c := NewUserController(&testUser{})
 		con := new(testContext)
 		c.SignIn(con)
 		Convey("200が返却されること", func() {
@@ -21,43 +21,36 @@ func TestSignIn(t *testing.T) {
 	})
 }
 
-type testSqlHandler struct{}
-type testMailHandler struct{}
+type testUser struct{}
 
-func (s *testSqlHandler) IStoreUser(email string, hashPassword string) (id int, err error) {
+func (u *testUser) AddUser(email string, password string) (err error) {
 	return
 }
-func (s *testSqlHandler) IGetUser(id int) (user *domain.User, err error) {
+func (u *testUser) ReSendConfirmValidEmail(email string) (err error) {
 	return
 }
-func (s *testSqlHandler) IStoreNonPasswordUser(email string) (id int, err error) {
+func (u *testUser) ChangeUserPassword(id int, password string, nextPassword string) (err error) {
 	return
 }
-func (s *testSqlHandler) ICheckExistUser(email string) (id int, err error) {
+func (u *testUser) GetAccessToken(email string, password string) (token string, err error) {
+	return "token", nil
+}
+func (u *testUser) ConfirmValidAccessToken(accessToken string) (id int, err error) {
 	return
 }
-func (s *testSqlHandler) ICheckCertificationUser(email string, password string) (id int, err error) {
+func (u *testUser) ActivationEmail(validToken string) (err error) {
 	return
 }
-func (s *testSqlHandler) IUpdateValidEmail(id int) (err error) {
+func (u *testUser) ActivationPassword(id int, password string) (err error) {
 	return
 }
-func (s *testSqlHandler) IStoreSocialProfile(servise string, userID int, uid string) (err error) {
+func (u *testUser) ForgotPassword(email string) (err error) {
 	return
 }
-func (s *testSqlHandler) ICheckExistSocialProfile(servise string, uid string) (userID int, err error) {
+func (u *testUser) ProcessForgotPassword(token string, newPassword string) (err error) {
 	return
 }
-func (s *testSqlHandler) IUpdateUserPassword(id int, hashPassword string) (err error) {
-	return
-}
-func (s *testSqlHandler) IUpdateActivationPassword(id int, hashPassword string) (err error) {
-	return
-}
-func (m *testMailHandler) ISendConfirmValidEmail(email string, token string) (err error) {
-	return
-}
-func (m *testMailHandler) ISendForgotPasswordMail(email string, token string) (err error) {
+func (u *testUser) CertificationSocialProfile(servise usecase.ServiseEnum, email string, uid string) (token string, err error) {
 	return
 }
 

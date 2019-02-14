@@ -15,6 +15,11 @@ type UserUsecase struct {
 	UserMail
 }
 
+func NewUserUsecase(sqlHandler UserRepository, mailHandler UserMail) *UserUsecase {
+	u := &UserUsecase{sqlHandler, mailHandler}
+	return u
+}
+
 // AddUser ユーザを追加します。
 func (u *UserUsecase) AddUser(email string, password string) error {
 	d := new(domain.User)

@@ -5,15 +5,12 @@ import (
 )
 
 type UserController struct {
-	*usecase.UserUsecase
+	usecase.UserInterface
 }
 
-func NewUserController(sqlHandler usecase.UserRepository, mailHandler usecase.UserMail) *UserController {
+func NewUserController(user usecase.UserInterface) *UserController {
 	return &UserController{
-		&usecase.UserUsecase{
-			sqlHandler,
-			mailHandler,
-		},
+		user,
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"github.com/gaku3601/clean-blog/src/infrastructure/database"
 	"github.com/gaku3601/clean-blog/src/infrastructure/mail"
 	"github.com/gaku3601/clean-blog/src/interfaces/controller"
+	"github.com/gaku3601/clean-blog/src/usecase"
 	gin "github.com/gin-gonic/gin"
 )
 
@@ -27,7 +28,8 @@ func (c *Context) JSON(status int, content interface{}) {
 func Start() {
 	router := gin.Default()
 
-	userController := controller.NewUserController(database.NewSQLHandler(), mail.NewMailHandler())
+	c := usecase.NewUserUsecase(database.NewSQLHandler(), mail.NewMailHandler())
+	userController := controller.NewUserController(c)
 
 	router.POST("/users", nomal(userController.Create))
 	router.POST("/signin", nomal(userController.SignIn))
