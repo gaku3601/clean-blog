@@ -100,6 +100,8 @@ func (s *SQLHandler) StoreSocialProfile(service string, uid string, userID int) 
 	_, err = s.Conn.Exec("Insert Into social_profiles (service, uid, user_id) values ($1, $2, $3);", service, uid, userID)
 	return
 }
+
+// CheckExistSocialProfile SocialProfileを検索し、データが存在していた場合、userIDを返却する。
 func (s *SQLHandler) CheckExistSocialProfile(service string, uid string) (userID int, err error) {
 	err = s.Conn.QueryRow("select user_id from social_profiles where service = $1 and uid = $2;", service, uid).Scan(&userID)
 	if err != nil && err.Error() == "sql: no rows in result set" {
