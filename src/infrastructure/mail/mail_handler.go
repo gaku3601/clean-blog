@@ -77,3 +77,13 @@ func createConfirmValidEmailURL(token string) (url string, err error) {
 	url = env + "validemail/" + token
 	return url, nil
 }
+
+// createForgotPasswordURL forgat password用のURLを発行します。
+func createForgotPasswordURL(token string) (url string, err error) {
+	env := os.Getenv("FRONTHOST")
+	if env == "" {
+		return "", errors.New("$FRONTHOST環境変数を設定してください。")
+	}
+	url = env + "forgotpassword/" + token
+	return url, nil
+}
