@@ -59,6 +59,17 @@ func (m *MailHandler) SendConfirmValidEmail(email string, token string) (err err
 
 	return
 }
+
 func (m *MailHandler) SendForgotPasswordMail(email string, token string) (err error) {
 	return
+}
+
+// createConfirmValidEmailURL email有効化用のurlを発行します。
+func createConfirmValidEmailURL(token string) (url string, err error) {
+	env := os.Getenv("FRONTHOST")
+	if env == "" {
+		return "", errors.New("$FRONTHOST環境変数を設定してください。")
+	}
+	url = env + "validemail/" + token
+	return url, nil
 }
