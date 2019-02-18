@@ -8,6 +8,8 @@ require (
 	github.com/jtolds/gls v4.2.1+incompatible // indirect
 	github.com/lib/pq v1.0.0
 	github.com/mattn/go-isatty v0.0.4 // indirect
+	github.com/sendgrid/rest v2.4.1+incompatible
+	github.com/sendgrid/sendgrid-go v3.4.1+incompatible
 	github.com/smartystreets/assertions v0.0.0-20190116191733-b6c0e53d7304 // indirect
 	github.com/smartystreets/goconvey v0.0.0-20181108003508-044398e4856c
 	github.com/ugorji/go/codec v0.0.0-20190204201341-e444a5086c43 // indirect
