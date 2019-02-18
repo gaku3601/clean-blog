@@ -15,6 +15,13 @@ func Test(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 	})
+	Convey("SendForgotPasswordMail()", t, func() {
+		SkipConvey("送信可能か(メール送信してしまうため、skipしている)", func() {
+			m := NewMailHandler()
+			err := m.SendForgotPasswordMail("pro.gaku@gmail.com", "forgot")
+			So(err, ShouldBeNil)
+		})
+	})
 	Convey("createConfirmValidEmailURL()", t, func() {
 		Convey("$FRONTHOST環境変数が取得できない場合、errorが出力されること", func() {
 			os.Setenv("FRONTHOST", "")
