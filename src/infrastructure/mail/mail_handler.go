@@ -26,6 +26,10 @@ func NewMailHandler() usecase.UserMail {
 }
 
 func (m *MailHandler) SendConfirmValidEmail(email string, token string) (err error) {
+	url, err := createConfirmValidEmailURL(token)
+	if err != nil {
+		return err
+	}
 	data := fmt.Sprintf(`
 	{
 		"personalizations": [
@@ -46,7 +50,7 @@ func (m *MailHandler) SendConfirmValidEmail(email string, token string) (err err
 		},
 		"template_id":"d-aba4554d7e4e40a79ad7c62773ee20ef",
 	}	
-	`, email, token)
+	`, email, url)
 	m.Request.Body = []byte(data)
 
 	res, err := sendgrid.API(m.Request)

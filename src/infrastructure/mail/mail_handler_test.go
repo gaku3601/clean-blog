@@ -15,7 +15,7 @@ func Test(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 	})
-	Convey("createConfirmValidEmailURL()", t, func() {
+	Convey("createConfirmValidEmailUrl()", t, func() {
 		Convey("$FRONTHOST環境変数が取得できない場合、errorが出力されること", func() {
 			os.Setenv("FRONTHOST", "")
 			_, err := createConfirmValidEmailURL("token")
