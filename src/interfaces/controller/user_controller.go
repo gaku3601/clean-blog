@@ -48,3 +48,16 @@ func (ctrl *UserController) SendValidEmail(c Context) {
 	}
 	c.JSON(200, "success")
 }
+
+//ChangePassword Userのpasswordを変更します
+func (ctrl *UserController) ChangePassword(c Context) {
+	id := c.IDParam()
+	password := c.PasswordParam()
+	newPassword := c.NewPasswordParam()
+	err := ctrl.ChangeUserPassword(id, password, newPassword)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, "success")
+}

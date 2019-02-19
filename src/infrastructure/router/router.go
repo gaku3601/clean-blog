@@ -22,6 +22,12 @@ func (c *Context) EmailParam() (email string) {
 func (c *Context) PasswordParam() (password string) {
 	return
 }
+func (c *Context) NewPasswordParam() (newPassword string) {
+	return
+}
+func (c *Context) IDParam() (id int) {
+	return
+}
 func (c *Context) JSON(status int, content interface{}) {
 	c.gin.JSON(status, content)
 }

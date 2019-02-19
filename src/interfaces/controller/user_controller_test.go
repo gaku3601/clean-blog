@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/gaku3601/clean-blog/src/usecase"
@@ -36,7 +37,7 @@ func (u *testUser) GetAccessToken(email string, password string) (token string, 
 	return "token", nil
 }
 func (u *testUser) ConfirmValidAccessToken(accessToken string) (id int, err error) {
-	return
+	return 0, errors.New("error")
 }
 func (u *testUser) ActivationEmail(validToken string) (err error) {
 	return
@@ -59,8 +60,10 @@ type testContext struct {
 	content interface{}
 }
 
-func (t *testContext) EmailParam() (email string)       { return "test" }
-func (t *testContext) PasswordParam() (password string) { return }
+func (t *testContext) EmailParam() (email string)             { return "test" }
+func (t *testContext) PasswordParam() (password string)       { return }
+func (t *testContext) NewPasswordParam() (newPassword string) { return }
+func (t *testContext) IDParam() (id int)                      { return }
 func (t *testContext) JSON(status int, content interface{}) {
 	t.status = status
 	t.content = content
