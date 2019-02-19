@@ -56,11 +56,12 @@ type testContext struct {
 	content interface{}
 }
 
-func (t *testContext) EmailParam() (email string)             { return "test" }
-func (t *testContext) PasswordParam() (password string)       { return }
-func (t *testContext) NewPasswordParam() (newPassword string) { return }
-func (t *testContext) IDParam() (id int)                      { return }
-func (t *testContext) EmailTokenParam() (token string)        { return }
+func (t *testContext) EmailParam() (email string)               { return "test" }
+func (t *testContext) PasswordParam() (password string)         { return }
+func (t *testContext) NewPasswordParam() (newPassword string)   { return }
+func (t *testContext) IDParam() (id int)                        { return }
+func (t *testContext) EmailTokenParam() (token string)          { return }
+func (t *testContext) ForgotPasswordTokenParam() (token string) { return }
 func (t *testContext) JSON(status int, content interface{}) {
 	t.status = status
 	t.content = content

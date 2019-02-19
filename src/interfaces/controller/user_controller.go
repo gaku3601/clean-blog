@@ -95,3 +95,15 @@ func (ctrl *UserController) SendForgotPasswordMail(c Context) {
 	}
 	c.JSON(200, "success")
 }
+
+// RestorationForgotPassword パスワードを忘れた際、送信したメールのtokenから復旧を行います。
+func (ctrl *UserController) RestorationForgotPassword(c Context) {
+	f := c.ForgotPasswordTokenParam()
+	newPass := c.NewPasswordParam()
+	err := ctrl.ProcessForgotPassword(f, newPass)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, "success")
+}
