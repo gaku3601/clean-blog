@@ -84,3 +84,14 @@ func (ctrl *UserController) ValidPassword(c Context) {
 	}
 	c.JSON(200, "success")
 }
+
+// SendForgotPasswordMail パスワードを忘れた際、復旧用のemailを送信します。
+func (ctrl *UserController) SendForgotPasswordMail(c Context) {
+	m := c.EmailParam()
+	err := ctrl.ForgotPassword(m)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, "success")
+}
