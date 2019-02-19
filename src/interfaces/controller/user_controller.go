@@ -71,5 +71,16 @@ func (ctrl *UserController) ValidEmail(c Context) {
 		return
 	}
 	c.JSON(200, "success")
+}
 
+// ValidPassword パスワード認証を有効化します。
+func (ctrl *UserController) ValidPassword(c Context) {
+	id := c.IDParam()
+	newPassword := c.NewPasswordParam()
+	err := ctrl.ActivationPassword(id, newPassword)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, "success")
 }
