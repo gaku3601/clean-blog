@@ -48,7 +48,7 @@ func TestContext(t *testing.T) {
 
 func TestAuth(t *testing.T) {
 	Convey("auth()", t, func() {
-		Convey("証明されていないAccessTokenが送信された場合、500エラーが返却されること", func() {
+		Convey("署名されていないAccessTokenが送信された場合、500エラーが返却されること", func() {
 			test := func() *gin.Engine {
 				router := gin.Default()
 				testFunc := func(controller.Context) {
