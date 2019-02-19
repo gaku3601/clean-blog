@@ -5,5 +5,6 @@ type Context interface {
 	EmailParam() (email string)
 	PasswordParam() (password string)
 	NewPasswordParam() (newPassword string)
+	EmailTokenParam() (token string)
 	JSON(int, interface{})
 }

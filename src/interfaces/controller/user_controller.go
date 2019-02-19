@@ -61,3 +61,15 @@ func (ctrl *UserController) ChangePassword(c Context) {
 	}
 	c.JSON(200, "success")
 }
+
+// ValidEmail tokenを検証し、emailを有効化します。
+func (ctrl *UserController) ValidEmail(c Context) {
+	token := c.EmailTokenParam()
+	err := ctrl.ActivationEmail(token)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, "success")
+
+}

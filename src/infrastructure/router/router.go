@@ -33,6 +33,9 @@ func (c *Context) IDParam() (id int) {
 	id = c.accessTokenParam.ID
 	return
 }
+func (c *Context) EmailTokenParam() (token string) {
+	return
+}
 func (c *Context) JSON(status int, content interface{}) {
 	c.gin.JSON(status, content)
 }
