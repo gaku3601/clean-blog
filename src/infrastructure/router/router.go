@@ -10,15 +10,16 @@ import (
 
 type Context struct{ gin *gin.Context }
 
-func (c *Context) UserParams() (email string, password string) {
+func (c *Context) EmailParam() (email string) {
 	type Json struct {
-		Email    string `json:"email" binding:"required"`
-		Password string `json:"password" binding:"required"`
+		Email string `json:"email" binding:"required"`
 	}
 	var j Json
 	c.gin.BindJSON(&j)
 	email = j.Email
-	password = j.Password
+	return
+}
+func (c *Context) PasswordParam() (password string) {
 	return
 }
 func (c *Context) JSON(status int, content interface{}) {

@@ -1,6 +1,7 @@
 package controller
 
 type Context interface {
-	UserParams() (email string, password string)
+	EmailParam() (email string)
+	PasswordParam() (password string)
 	JSON(int, interface{})
 }

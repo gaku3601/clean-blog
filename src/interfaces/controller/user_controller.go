@@ -14,9 +14,11 @@ func NewUserController(user usecase.UserInterface) *UserController {
 	}
 }
 
-func (controller *UserController) Create(c Context) {
-	email, password := c.UserParams()
-	err := controller.AddUser(email, password)
+// Create ユーザ作成処置
+func (ctrl *UserController) Create(c Context) {
+	email := c.EmailParam()
+	password := c.PasswordParam()
+	err := ctrl.AddUser(email, password)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
@@ -24,12 +26,25 @@ func (controller *UserController) Create(c Context) {
 	c.JSON(201, nil)
 }
 
-func (controller *UserController) SignIn(c Context) {
-	email, password := c.UserParams()
-	token, err := controller.GetAccessToken(email, password)
+// SignIn ログイン処理
+func (ctrl *UserController) SignIn(c Context) {
+	email := c.EmailParam()
+	password := c.PasswordParam()
+	token, err := ctrl.GetAccessToken(email, password)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
 	}
 	c.JSON(200, token)
+}
+
+// SendValidEmail email有効化メールを再送信します。
+func (ctrl *UserController) SendValidEmail(c Context) {
+	email := c.EmailParam()
+	err := ctrl.ReSendConfirmValidEmail(email)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(200, "success")
 }

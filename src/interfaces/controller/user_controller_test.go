@@ -59,7 +59,8 @@ type testContext struct {
 	content interface{}
 }
 
-func (t *testContext) UserParams() (email string, password string) { return "test", "aaa" }
+func (t *testContext) EmailParam() (email string)       { return "test" }
+func (t *testContext) PasswordParam() (password string) { return }
 func (t *testContext) JSON(status int, content interface{}) {
 	t.status = status
 	t.content = content
