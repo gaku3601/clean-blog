@@ -82,12 +82,6 @@ func (u *UserUsecase) GetAccessToken(email string, password string) (string, err
 	return token, nil
 }
 
-// ConfirmValidAccessToken AccessTokenの有効性をチェックし、UserIDを返却します。
-func (u *UserUsecase) ConfirmValidAccessToken(accessToken string) (id int, err error) {
-	id, err = u.checkToken(accessToken, "accesskey")
-	return
-}
-
 // ActivationEmail 登録時にメール宛に発行したtokenを検証し、Emailの有効性を確認、更新します。
 func (u *UserUsecase) ActivationEmail(validToken string) error {
 	id, err := u.checkToken(validToken, "emailkey")

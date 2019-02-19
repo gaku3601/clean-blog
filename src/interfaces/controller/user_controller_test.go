@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/gaku3601/clean-blog/src/usecase"
@@ -35,9 +34,6 @@ func (u *testUser) ChangeUserPassword(id int, password string, nextPassword stri
 }
 func (u *testUser) GetAccessToken(email string, password string) (token string, err error) {
 	return "token", nil
-}
-func (u *testUser) ConfirmValidAccessToken(accessToken string) (id int, err error) {
-	return 0, errors.New("error")
 }
 func (u *testUser) ActivationEmail(validToken string) (err error) {
 	return

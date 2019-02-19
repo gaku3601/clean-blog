@@ -5,7 +5,6 @@ type UserInterface interface {
 	ReSendConfirmValidEmail(email string) (err error)
 	ChangeUserPassword(id int, password string, nextPassword string) (err error)
 	GetAccessToken(email string, password string) (token string, err error)
-	ConfirmValidAccessToken(accessToken string) (id int, err error)
 	ActivationEmail(validToken string) (err error)
 	ActivationPassword(id int, password string) (err error)
 	ForgotPassword(email string) (err error)
